@@ -517,3 +517,6 @@ Built as a comprehensive full-stack project demonstrating all syllabus units for
 
 **Note**: This is a production-ready, exam-ready project with comprehensive comments explaining all concepts. Perfect for viva voce and demonstrations.
 
+=======
+# Dynamic-Coupon-generator
+
