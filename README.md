@@ -359,110 +359,6 @@ npm run build
 # Backend (no build needed, just ensure dependencies are installed)
 cd backend
 npm install --production
-```
-
-## 📚 Syllabus Coverage
-
-### Backend (Node.js) - All Units Covered
-
-#### ✅ UNIT I – Node.js Fundamentals
-- Node.js purpose and introduction
-- npm init setup
-- Core modules: `fs`, `path`, `zlib`, `events`, `streams`
-- Local and third-party modules
-- EventEmitter for coupon usage events
-- Callbacks, Promises, async/await
-- REPL explanation (in comments)
-- fs module usage (read/write logs)
-- JSON read/write
-- Stream module for coupon usage logs
-- Zlib compression/decompression
-
-#### ✅ UNIT II – HTTP & Express
-- HTTP module concepts
-- Express setup
-- GET, POST, PUT, DELETE APIs
-- body-parser / express.json()
-- express.Router usage
-- express-validator for input validation
-- Status codes & headers
-
-#### ✅ UNIT III – Sockets & Middleware
-- WebSocket concepts
-- Socket.IO server
-- Real-time coupon usage broadcast
-- Middleware creation
-- cookie-parser
-- express-session
-- app.use() and app.all()
-
-#### ✅ UNIT IV – MongoDB & Mongoose
-- MongoDB terminology
-- Database & collection creation
-- CRUD operations
-- Coupon schema
-- Campaign schema
-- Usage tracking schema
-- Mongoose models & validation
-
-#### ✅ UNIT V – MongoDB Advanced Features
-- Advanced MongoDB queries
-- Aggregation pipelines
-- Complex relationships
-- Index optimization
-
-#### ✅ UNIT VI – Testing & Deployment
-- REST API testing guidance
-- GitHub-ready project
-- Third-party rendering compatibility
-- Environment variable setup
-
-### Frontend (React) - All Units Covered
-
-#### ✅ UNIT I – JavaScript & React Basics
-- ES6 features (let, const, arrow functions)
-- Array methods (map, filter, reduce)
-- Destructuring, spread, rest
-- Modules
-- SPA vs MPA explanation
-- React setup with Vite
-- JSX vs React.createElement
-- Component basics
-
-#### ✅ UNIT II – Components & Styling
-- Functional & class components
-- Props
-- Virtual DOM explanation
-- Inline CSS, CSS files, CSS Modules
-- TailwindCSS integration
-
-#### ✅ UNIT III – State, Events & Hooks
-- Event handling
-- Stateful vs stateless components
-- Lifecycle explanation
-- Hooks: useState, useEffect, useContext
-- useRef, useReducer, useMemo, useCallback
-- Custom hooks
-
-#### ✅ UNIT IV – Forms
-- Coupon creation form
-- Controlled & uncontrolled inputs
-- Validation & error display
-
-#### ✅ UNIT V – HTTP & Routing
-- Fetch & Axios
-- GET, POST, PUT, DELETE
-- React Router
-- Query params
-- Passing data between routes
-- API data fetching
-
-#### ✅ UNIT VI – Redux & Deployment
-- Redux store
-- Reducers & actions
-- Coupon state management
-- Debugging tools
-- Production build steps
 
 ## 👥 Default Users
 
@@ -498,10 +394,6 @@ Sample data can be created through the UI:
 - Check `SESSION_SECRET` in `.env`
 - Verify `withCredentials: true` in Axios requests
 
-## 📄 License
-
-MIT License - feel free to use this project for educational purposes.
-
 ## 👨‍💻 Author
 
 Built as a comprehensive full-stack project demonstrating all syllabus units for web development course.
@@ -513,10 +405,6 @@ Built as a comprehensive full-stack project demonstrating all syllabus units for
 - MongoDB documentation
 - Socket.IO team
 
----
 
-**Note**: This is a production-ready, exam-ready project with comprehensive comments explaining all concepts. Perfect for viva voce and demonstrations.
 
-=======
-# Dynamic-Coupon-generator
 
