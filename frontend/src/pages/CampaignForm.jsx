@@ -86,7 +86,7 @@ const CampaignForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validate()) {
       return;
     }
@@ -114,94 +114,95 @@ const CampaignForm = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <h1 className="text-5xl font-bold text-primary-900 tracking-tight mb-16 border-b border-primary-200 pb-4">
-        {isEditMode ? 'Edit Campaign' : 'Create New Campaign'}
-      </h1>
+    <div className="max-w-2xl mx-auto pt-8">
+      <div className="bg-[#010409] border border-[#30363d] rounded-[12px] p-8 shadow-2xl animate-float">
+        <h1 className="text-3xl font-bold text-white tracking-tight mb-8 border-b border-[#30363d] pb-4">
+          {isEditMode ? 'Edit Campaign' : 'Create New Campaign'}
+        </h1>
 
-      <form onSubmit={handleSubmit} className="space-y-12">
-        <div>
-          <label htmlFor="name" className="block text-sm font-medium text-primary-900 mb-3 tracking-tight">
-            Campaign Name *
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className={`w-full px-0 py-3 border-0 border-b bg-transparent focus:outline-none text-primary-900 placeholder-primary-400 text-base ${
-              errors.name ? 'border-primary-500' : 'border-primary-300 focus:border-primary-900'
-            }`}
-          />
-          {errors.name && <p className="text-primary-600 text-sm mt-2">{errors.name}</p>}
-        </div>
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <div>
+            <label htmlFor="name" className="block text-sm font-semibold text-white mb-2">
+              Campaign Name <span className="text-[#ff7b72]">*</span>
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              className={`w-full bg-[#0d1117] border border-[#30363d] rounded-[6px] px-3 py-2 text-white text-sm focus:outline-none focus:border-[#58a6ff] focus:ring-2 focus:ring-[#58a6ff]/30 transition-all shadow-sm placeholder-[#484f58] ${errors.name ? 'border-[#ff7b72] focus:border-[#ff7b72] focus:ring-[#ff7b72]/30' : ''
+                }`}
+            />
+            {errors.name && <p className="text-[#ff7b72] text-xs mt-1">{errors.name}</p>}
+          </div>
 
-        <div>
-          <label htmlFor="description" className="block text-sm font-medium text-primary-900 mb-3 tracking-tight">
-            Description
-          </label>
-          <textarea
-            id="description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            rows="4"
-            className="w-full px-0 py-3 border-0 border-b border-primary-300 bg-transparent focus:outline-none focus:border-primary-900 text-primary-900 placeholder-primary-400 text-base resize-none"
-          />
-        </div>
+          <div>
+            <label htmlFor="description" className="block text-sm font-semibold text-white mb-2">
+              Description
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              rows="4"
+              className="w-full bg-[#0d1117] border border-[#30363d] rounded-[6px] px-3 py-2 text-white text-sm focus:outline-none focus:border-[#58a6ff] focus:ring-2 focus:ring-[#58a6ff]/30 transition-all shadow-sm placeholder-[#484f58] resize-none"
+            />
+          </div>
 
-        <div>
-          <label htmlFor="startDate" className="block text-sm font-medium text-primary-900 mb-3 tracking-tight">
-            Start Date *
-          </label>
-          <input
-            type="date"
-            id="startDate"
-            name="startDate"
-            value={formData.startDate}
-            onChange={handleChange}
-            className={`w-full px-0 py-3 border-0 border-b bg-transparent focus:outline-none text-primary-900 text-base ${
-              errors.startDate ? 'border-primary-500' : 'border-primary-300 focus:border-primary-900'
-            }`}
-          />
-          {errors.startDate && <p className="text-primary-600 text-sm mt-2">{errors.startDate}</p>}
-        </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label htmlFor="startDate" className="block text-sm font-semibold text-white mb-2">
+                Start Date <span className="text-[#ff7b72]">*</span>
+              </label>
+              <input
+                type="date"
+                id="startDate"
+                name="startDate"
+                value={formData.startDate}
+                onChange={handleChange}
+                className={`w-full bg-[#0d1117] border border-[#30363d] rounded-[6px] px-3 py-2 text-white text-sm focus:outline-none focus:border-[#58a6ff] focus:ring-2 focus:ring-[#58a6ff]/30 transition-all shadow-sm is-dark-date ${errors.startDate ? 'border-[#ff7b72] focus:border-[#ff7b72] focus:ring-[#ff7b72]/30' : ''
+                  }`}
+              />
+              {errors.startDate && <p className="text-[#ff7b72] text-xs mt-1">{errors.startDate}</p>}
+            </div>
 
-        <div>
-          <label htmlFor="endDate" className="block text-sm font-medium text-primary-900 mb-3 tracking-tight">
-            End Date *
-          </label>
-          <input
-            type="date"
-            id="endDate"
-            name="endDate"
-            value={formData.endDate}
-            onChange={handleChange}
-            className={`w-full px-0 py-3 border-0 border-b bg-transparent focus:outline-none text-primary-900 text-base ${
-              errors.endDate ? 'border-primary-500' : 'border-primary-300 focus:border-primary-900'
-            }`}
-          />
-          {errors.endDate && <p className="text-primary-600 text-sm mt-2">{errors.endDate}</p>}
-        </div>
+            <div>
+              <label htmlFor="endDate" className="block text-sm font-semibold text-white mb-2">
+                End Date <span className="text-[#ff7b72]">*</span>
+              </label>
+              <input
+                type="date"
+                id="endDate"
+                name="endDate"
+                value={formData.endDate}
+                onChange={handleChange}
+                className={`w-full bg-[#0d1117] border border-[#30363d] rounded-[6px] px-3 py-2 text-white text-sm focus:outline-none focus:border-[#58a6ff] focus:ring-2 focus:ring-[#58a6ff]/30 transition-all shadow-sm is-dark-date ${errors.endDate ? 'border-[#ff7b72] focus:border-[#ff7b72] focus:ring-[#ff7b72]/30' : ''
+                  }`}
+              />
+              {errors.endDate && <p className="text-[#ff7b72] text-xs mt-1">{errors.endDate}</p>}
+            </div>
+          </div>
 
-        <div className="flex space-x-4 pt-8 border-t border-primary-200">
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="bg-primary-900 text-white px-8 py-3 text-sm font-medium hover:bg-primary-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            {isSubmitting ? 'Saving...' : isEditMode ? 'Update Campaign' : 'Create Campaign'}
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate('/campaigns')}
-            className="text-primary-700 px-8 py-3 text-sm font-medium hover:text-primary-900 transition-colors"
-          >
-            Cancel
-          </button>
-        </div>
-      </form>
+          <div className="flex space-x-4 pt-8 border-t border-[#30363d]">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="bg-[#238636] text-white px-6 py-2.5 rounded-[6px] text-sm font-bold hover:bg-[#2ea043] border border-[rgba(240,246,252,0.1)] transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isSubmitting ? 'Saving...' : isEditMode ? 'Update Campaign' : 'Create Campaign'}
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/campaigns')}
+              className="text-[#c9d1d9] px-6 py-2.5 text-sm font-medium hover:text-white transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

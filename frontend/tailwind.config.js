@@ -7,7 +7,27 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        sans: [
+          'Inter',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'Segoe UI',
+          'Helvetica',
+          'Arial',
+          'sans-serif',
+          'Apple Color Emoji',
+          'Segoe UI Emoji',
+        ],
+        mono: [
+          'ui-monospace',
+          'SFMono-Regular',
+          'Menlo',
+          'Monaco',
+          'Consolas',
+          'Liberation Mono',
+          'Courier New',
+          'monospace',
+        ],
       },
       colors: {
         // Hello Heco-inspired neutral palette
@@ -30,31 +50,24 @@ export default {
           light: '#4a4a4a',
         },
       },
-      spacing: {
-        '18': '4.5rem',
-        '22': '5.5rem',
-        '26': '6.5rem',
-        '30': '7.5rem',
-      },
-      letterSpacing: {
-        tighter: '-0.03em',
-        tight: '-0.02em',
-      },
-      borderRadius: {
-        'none': '0',
-        'sm': '0px',
-        DEFAULT: '0px',
-        'md': '0px',
-        'lg': '0px',
-        'xl': '0px',
-      },
-      boxShadow: {
-        'minimal': '0 1px 3px 0 rgba(0, 0, 0, 0.05)',
-        'soft': '0 2px 8px 0 rgba(0, 0, 0, 0.04)',
+      theme: {
+        extend: {
+          '18': '4.5rem',
+          '22': '5.5rem',
+          '26': '6.5rem',
+          '30': '7.5rem',
+        },
+        letterSpacing: {
+          tighter: '-0.03em',
+          tight: '-0.02em',
+        },
+        boxShadow: {
+          'minimal': '0 1px 3px 0 rgba(0, 0, 0, 0.05)',
+          'soft': '0 2px 8px 0 rgba(0, 0, 0, 0.04)',
+        },
       },
     },
-  },
-  plugins: [],
-}
+    plugins: [],
+  }
 
 

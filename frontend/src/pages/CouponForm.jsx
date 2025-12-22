@@ -169,206 +169,217 @@ const CouponForm = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <h1 className="text-5xl font-bold text-primary-900 tracking-tight mb-16 border-b border-primary-200 pb-4">
-        {isEditMode ? 'Edit Coupon' : 'Create New Coupon'}
-      </h1>
+    <div className="max-w-2xl mx-auto pt-8">
+      <div className="bg-[#010409] border border-[#30363d] rounded-[12px] p-8 shadow-2xl animate-float">
+        <h1 className="text-3xl font-bold text-white tracking-tight mb-8 border-b border-[#30363d] pb-4">
+          {isEditMode ? 'Edit Coupon' : 'Create New Coupon'}
+        </h1>
 
-      <form onSubmit={handleSubmit} className="space-y-12">
-        {/* Coupon Code */}
-        <div>
-          <label htmlFor="code" className="block text-sm font-medium text-primary-900 mb-3 tracking-tight">
-            Coupon Code *
-          </label>
-          <input
-            type="text"
-            id="code"
-            name="code"
-            value={formData.code}
-            onChange={handleChange}
-            disabled={isEditMode}
-            className={`w-full px-0 py-3 border-0 border-b bg-transparent focus:outline-none text-primary-900 placeholder-primary-400 text-base ${errors.code ? 'border-primary-500' : 'border-primary-300 focus:border-primary-900'
-              } disabled:opacity-50`}
-            placeholder="e.g., SAVE20"
-          />
-          {errors.code && <p className="text-primary-600 text-sm mt-2">{errors.code}</p>}
-        </div>
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Coupon Code */}
+          <div>
+            <label htmlFor="code" className="block text-sm font-semibold text-white mb-2">
+              Coupon Code <span className="text-[#ff7b72]">*</span>
+            </label>
+            <input
+              type="text"
+              id="code"
+              name="code"
+              value={formData.code}
+              onChange={handleChange}
+              disabled={isEditMode}
+              className={`w-full bg-[#0d1117] border border-[#30363d] rounded-[6px] px-3 py-2 text-white text-sm focus:outline-none focus:border-[#58a6ff] focus:ring-2 focus:ring-[#58a6ff]/30 transition-all shadow-sm placeholder-[#484f58] ${errors.code ? 'border-[#ff7b72] focus:border-[#ff7b72] focus:ring-[#ff7b72]/30' : ''
+                } disabled:opacity-50 disabled:cursor-not-allowed`}
+              placeholder="e.g., SAVE20"
+            />
+            {errors.code && <p className="text-[#ff7b72] text-xs mt-1">{errors.code}</p>}
+          </div>
 
-        {/* Description */}
-        <div>
-          <label htmlFor="description" className="block text-sm font-medium text-primary-900 mb-3 tracking-tight">
-            Description
-          </label>
-          <textarea
-            id="description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            rows="3"
-            className="w-full px-0 py-3 border-0 border-b border-primary-300 bg-transparent focus:outline-none focus:border-primary-900 text-primary-900 placeholder-primary-400 text-base resize-none"
-            placeholder="Coupon description"
-          />
-        </div>
+          {/* Description */}
+          <div>
+            <label htmlFor="description" className="block text-sm font-semibold text-white mb-2">
+              Description
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              rows="3"
+              className="w-full bg-[#0d1117] border border-[#30363d] rounded-[6px] px-3 py-2 text-white text-sm focus:outline-none focus:border-[#58a6ff] focus:ring-2 focus:ring-[#58a6ff]/30 transition-all shadow-sm placeholder-[#484f58] resize-none"
+              placeholder="Coupon description"
+            />
+          </div>
 
-        {/* Discount Type */}
-        <div>
-          <label htmlFor="discountType" className="block text-sm font-medium text-primary-900 mb-3 tracking-tight">
-            Discount Type *
-          </label>
-          <select
-            id="discountType"
-            name="discountType"
-            value={formData.discountType}
-            onChange={handleChange}
-            className="w-full px-0 py-3 border-0 border-b border-primary-300 bg-transparent focus:outline-none focus:border-primary-900 text-primary-900 text-base"
-          >
-            <option value="percentage">Percentage</option>
-            <option value="fixed">Fixed Amount</option>
-          </select>
-        </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Discount Type */}
+            <div>
+              <label htmlFor="discountType" className="block text-sm font-semibold text-white mb-2">
+                Discount Type <span className="text-[#ff7b72]">*</span>
+              </label>
+              <select
+                id="discountType"
+                name="discountType"
+                value={formData.discountType}
+                onChange={handleChange}
+                className="w-full bg-[#0d1117] border border-[#30363d] rounded-[6px] px-3 py-2 text-white text-sm focus:outline-none focus:border-[#58a6ff] focus:ring-2 focus:ring-[#58a6ff]/30 transition-all shadow-sm"
+              >
+                <option value="percentage">Percentage</option>
+                <option value="fixed">Fixed Amount</option>
+              </select>
+            </div>
 
-        {/* Discount Value */}
-        <div>
-          <label htmlFor="discountValue" className="block text-sm font-medium text-primary-900 mb-3 tracking-tight">
-            Discount Value *
-          </label>
-          <input
-            type="number"
-            id="discountValue"
-            name="discountValue"
-            value={formData.discountValue}
-            onChange={handleChange}
-            min="0"
-            step={formData.discountType === 'percentage' ? '1' : '0.01'}
-            className={`w-full px-0 py-3 border-0 border-b bg-transparent focus:outline-none text-primary-900 placeholder-primary-400 text-base ${errors.discountValue ? 'border-primary-500' : 'border-primary-300 focus:border-primary-900'
-              }`}
-          />
-          {errors.discountValue && <p className="text-primary-600 text-sm mt-2">{errors.discountValue}</p>}
-        </div>
+            {/* Discount Value */}
+            <div>
+              <label htmlFor="discountValue" className="block text-sm font-semibold text-white mb-2">
+                Discount Value <span className="text-[#ff7b72]">*</span>
+              </label>
+              <input
+                type="number"
+                id="discountValue"
+                name="discountValue"
+                value={formData.discountValue}
+                onChange={handleChange}
+                min="0"
+                step={formData.discountType === 'percentage' ? '1' : '0.01'}
+                className={`w-full bg-[#0d1117] border border-[#30363d] rounded-[6px] px-3 py-2 text-white text-sm focus:outline-none focus:border-[#58a6ff] focus:ring-2 focus:ring-[#58a6ff]/30 transition-all shadow-sm placeholder-[#484f58] ${errors.discountValue ? 'border-[#ff7b72] focus:border-[#ff7b72] focus:ring-[#ff7b72]/30' : ''
+                  }`}
+              />
+              {errors.discountValue && <p className="text-[#ff7b72] text-xs mt-1">{errors.discountValue}</p>}
+            </div>
+          </div>
 
-        {/* Min Purchase Amount */}
-        <div>
-          <label htmlFor="minPurchaseAmount" className="block text-sm font-medium text-primary-900 mb-3 tracking-tight">
-            Minimum Purchase Amount
-          </label>
-          <input
-            type="number"
-            id="minPurchaseAmount"
-            name="minPurchaseAmount"
-            value={formData.minPurchaseAmount}
-            onChange={handleChange}
-            min="0"
-            step="0.01"
-            className="w-full px-0 py-3 border-0 border-b border-primary-300 bg-transparent focus:outline-none focus:border-primary-900 text-primary-900 placeholder-primary-400 text-base"
-          />
-        </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Min Purchase Amount */}
+            <div>
+              <label htmlFor="minPurchaseAmount" className="block text-sm font-semibold text-white mb-2">
+                Minimum Purchase Amount
+              </label>
+              <input
+                type="number"
+                id="minPurchaseAmount"
+                name="minPurchaseAmount"
+                value={formData.minPurchaseAmount}
+                onChange={handleChange}
+                min="0"
+                step="0.01"
+                className="w-full bg-[#0d1117] border border-[#30363d] rounded-[6px] px-3 py-2 text-white text-sm focus:outline-none focus:border-[#58a6ff] focus:ring-2 focus:ring-[#58a6ff]/30 transition-all shadow-sm placeholder-[#484f58]"
+              />
+            </div>
 
-        {/* Max Discount Amount */}
-        <div>
-          <label htmlFor="maxDiscountAmount" className="block text-sm font-medium text-primary-900 mb-3 tracking-tight">
-            Maximum Discount Amount
-          </label>
-          <input
-            type="number"
-            id="maxDiscountAmount"
-            name="maxDiscountAmount"
-            value={formData.maxDiscountAmount}
-            onChange={handleChange}
-            min="0"
-            step="0.01"
-            className="w-full px-0 py-3 border-0 border-b border-primary-300 bg-transparent focus:outline-none focus:border-primary-900 text-primary-900 placeholder-primary-400 text-base"
-          />
-        </div>
+            {/* Max Discount Amount */}
+            <div>
+              <label htmlFor="maxDiscountAmount" className="block text-sm font-semibold text-white mb-2">
+                Maximum Discount Amount
+              </label>
+              <input
+                type="number"
+                id="maxDiscountAmount"
+                name="maxDiscountAmount"
+                value={formData.maxDiscountAmount}
+                onChange={handleChange}
+                min="0"
+                step="0.01"
+                className="w-full bg-[#0d1117] border border-[#30363d] rounded-[6px] px-3 py-2 text-white text-sm focus:outline-none focus:border-[#58a6ff] focus:ring-2 focus:ring-[#58a6ff]/30 transition-all shadow-sm placeholder-[#484f58]"
+              />
+            </div>
+          </div>
 
-        {/* Max Usage */}
-        <div>
-          <label htmlFor="maxUsage" className="block text-sm font-medium text-primary-900 mb-3 tracking-tight">
-            Maximum Usage (leave empty for unlimited)
-          </label>
-          <input
-            type="number"
-            id="maxUsage"
-            name="maxUsage"
-            value={formData.maxUsage}
-            onChange={handleChange}
-            min="1"
-            className="w-full px-0 py-3 border-0 border-b border-primary-300 bg-transparent focus:outline-none focus:border-primary-900 text-primary-900 placeholder-primary-400 text-base"
-          />
-        </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Max Usage */}
+            <div>
+              <label htmlFor="maxUsage" className="block text-sm font-semibold text-white mb-2">
+                Maximum Usage <span className="text-[#8b949e] font-normal">(optional)</span>
+              </label>
+              <input
+                type="number"
+                id="maxUsage"
+                name="maxUsage"
+                value={formData.maxUsage}
+                onChange={handleChange}
+                min="1"
+                className="w-full bg-[#0d1117] border border-[#30363d] rounded-[6px] px-3 py-2 text-white text-sm focus:outline-none focus:border-[#58a6ff] focus:ring-2 focus:ring-[#58a6ff]/30 transition-all shadow-sm placeholder-[#484f58]"
+                placeholder="Unlimited if empty"
+              />
+            </div>
 
-        {/* Campaign */}
-        <div>
-          <label htmlFor="campaignId" className="block text-sm font-medium text-primary-900 mb-3 tracking-tight">
-            Campaign *
-          </label>
-          <select
-            id="campaignId"
-            name="campaignId"
-            value={formData.campaignId}
-            onChange={handleChange}
-            className={`w-full px-0 py-3 border-0 border-b bg-transparent focus:outline-none text-primary-900 text-base ${errors.campaignId ? 'border-primary-500' : 'border-primary-300 focus:border-primary-900'
-              }`}
-          >
-            <option value="">Select a campaign</option>
-            {campaigns.map((campaign) => (
-              <option key={campaign._id} value={campaign._id}>
-                {campaign.name}
-              </option>
-            ))}
-          </select>
-          {errors.campaignId && <p className="text-primary-600 text-sm mt-2">{errors.campaignId}</p>}
-        </div>
+            {/* Campaign */}
+            <div>
+              <label htmlFor="campaignId" className="block text-sm font-semibold text-white mb-2">
+                Campaign <span className="text-[#ff7b72]">*</span>
+              </label>
+              <select
+                id="campaignId"
+                name="campaignId"
+                value={formData.campaignId}
+                onChange={handleChange}
+                className={`w-full bg-[#0d1117] border border-[#30363d] rounded-[6px] px-3 py-2 text-white text-sm focus:outline-none focus:border-[#58a6ff] focus:ring-2 focus:ring-[#58a6ff]/30 transition-all shadow-sm ${errors.campaignId ? 'border-[#ff7b72] focus:border-[#ff7b72] focus:ring-[#ff7b72]/30' : ''
+                  }`}
+              >
+                <option value="">Select a campaign</option>
+                {campaigns.map((campaign) => (
+                  <option key={campaign._id} value={campaign._id}>
+                    {campaign.name}
+                  </option>
+                ))}
+              </select>
+              {errors.campaignId && <p className="text-[#ff7b72] text-xs mt-1">{errors.campaignId}</p>}
+            </div>
+          </div>
 
-        {/* Start Date */}
-        <div>
-          <label htmlFor="startDate" className="block text-sm font-medium text-primary-900 mb-3 tracking-tight">
-            Start Date
-          </label>
-          <input
-            type="date"
-            id="startDate"
-            name="startDate"
-            value={formData.startDate}
-            onChange={handleChange}
-            className="w-full px-0 py-3 border-0 border-b border-primary-300 bg-transparent focus:outline-none focus:border-primary-900 text-primary-900 text-base"
-          />
-        </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Start Date */}
+            <div>
+              <label htmlFor="startDate" className="block text-sm font-semibold text-white mb-2">
+                Start Date
+              </label>
+              <input
+                type="date"
+                id="startDate"
+                name="startDate"
+                value={formData.startDate}
+                onChange={handleChange}
+                className="w-full bg-[#0d1117] border border-[#30363d] rounded-[6px] px-3 py-2 text-white text-sm focus:outline-none focus:border-[#58a6ff] focus:ring-2 focus:ring-[#58a6ff]/30 transition-all shadow-sm text-opacity-90 is-dark-date"
+              />
+            </div>
 
-        {/* Expiry Date */}
-        <div>
-          <label htmlFor="expiryDate" className="block text-sm font-medium text-primary-900 mb-3 tracking-tight">
-            Expiry Date *
-          </label>
-          <input
-            type="date"
-            id="expiryDate"
-            name="expiryDate"
-            value={formData.expiryDate}
-            onChange={handleChange}
-            className={`w-full px-0 py-3 border-0 border-b bg-transparent focus:outline-none text-primary-900 text-base ${errors.expiryDate ? 'border-primary-500' : 'border-primary-300 focus:border-primary-900'
-              }`}
-          />
-          {errors.expiryDate && <p className="text-primary-600 text-sm mt-2">{errors.expiryDate}</p>}
-        </div>
+            {/* Expiry Date */}
+            <div>
+              <label htmlFor="expiryDate" className="block text-sm font-semibold text-white mb-2">
+                Expiry Date <span className="text-[#ff7b72]">*</span>
+              </label>
+              <input
+                type="date"
+                id="expiryDate"
+                name="expiryDate"
+                value={formData.expiryDate}
+                onChange={handleChange}
+                className={`w-full bg-[#0d1117] border border-[#30363d] rounded-[6px] px-3 py-2 text-white text-sm focus:outline-none focus:border-[#58a6ff] focus:ring-2 focus:ring-[#58a6ff]/30 transition-all shadow-sm is-dark-date ${errors.expiryDate ? 'border-[#ff7b72] focus:border-[#ff7b72] focus:ring-[#ff7b72]/30' : ''
+                  }`}
+              />
+              {errors.expiryDate && <p className="text-[#ff7b72] text-xs mt-1">{errors.expiryDate}</p>}
+            </div>
+          </div>
 
-        {/* Submit Button */}
-        <div className="flex space-x-4 pt-8 border-t border-primary-200">
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="bg-primary-900 text-white px-8 py-3 text-sm font-medium hover:bg-primary-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            {isSubmitting ? 'Saving...' : isEditMode ? 'Update Coupon' : 'Create Coupon'}
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate('/coupons')}
-            className="text-primary-700 px-8 py-3 text-sm font-medium hover:text-primary-900 transition-colors"
-          >
-            Cancel
-          </button>
-        </div>
-      </form>
+          {/* Submit Button */}
+          <div className="flex space-x-4 pt-6 border-t border-[#30363d]">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="bg-[#238636] text-white px-6 py-2.5 rounded-[6px] text-sm font-bold hover:bg-[#2ea043] border border-[rgba(240,246,252,0.1)] transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isSubmitting ? 'Saving...' : isEditMode ? 'Update Coupon' : 'Create Coupon'}
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/coupons')}
+              className="text-[#c9d1d9] px-6 py-2.5 text-sm font-medium hover:text-white transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

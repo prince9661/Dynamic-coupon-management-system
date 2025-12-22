@@ -56,30 +56,30 @@ const CampaignList = () => {
   };
 
   return (
-    <div className="space-y-16">
-      <div className="flex justify-between items-end border-b border-primary-200 pb-4">
-        <h1 className="text-5xl font-bold text-primary-900 tracking-tight">Campaigns</h1>
+    <div className="space-y-12">
+      <div className="flex justify-between items-end border-b border-[#30363d] pb-4">
+        <h1 className="text-4xl font-bold text-white tracking-tight">Campaigns</h1>
         {user?.role === 'admin' && (
           <Link
             to="/campaigns/new"
-            className="bg-primary-900 text-white px-8 py-3 text-sm font-medium hover:bg-primary-800 transition-colors"
+            className="bg-[#1f6feb] text-white px-6 py-2.5 rounded-[6px] text-sm font-bold hover:bg-[#388bfd] border border-[rgba(240,246,252,0.1)] transition-colors shadow-sm"
           >
             Create New Campaign
           </Link>
         )}
       </div>
 
-      <div className="border-b border-primary-200 pb-6">
+      <div className="border-b border-[#30363d] pb-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
-            <label className="block text-sm font-medium text-primary-900 mb-3 tracking-tight">Status</label>
+            <label className="block text-sm font-semibold text-white mb-2">Status</label>
             <select
               name="isActive"
               value={filters.isActive}
               onChange={handleFilterChange}
-              className="w-full px-0 py-3 border-0 border-b border-primary-300 bg-transparent focus:outline-none focus:border-primary-900 text-primary-900 text-base"
+              className="w-full bg-[#0d1117] border border-[#30363d] rounded-[6px] px-3 py-2 text-white text-sm focus:outline-none focus:border-[#58a6ff] focus:ring-2 focus:ring-[#58a6ff]/30 transition-all shadow-sm"
             >
-              <option value="">All</option>
+              <option value="">All Statuses</option>
               <option value="true">Active</option>
               <option value="false">Inactive</option>
             </select>
@@ -89,46 +89,46 @@ const CampaignList = () => {
 
       {isLoading ? (
         <div className="text-center py-16">
-          <p className="text-primary-600">Loading campaigns...</p>
+          <p className="text-[#8b949e]">Loading campaigns...</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {campaigns.length > 0 ? (
             campaigns.map((campaign) => (
-              <div key={campaign._id} className="border-b border-primary-200 pb-8">
-                <div className="flex justify-between items-start mb-6">
-                  <h3 className="text-xl font-bold text-primary-900 tracking-tight">{campaign.name}</h3>
+              <div key={campaign._id} className="bg-[#010409] border border-[#30363d] rounded-[12px] p-6 shadow-xl hover:-translate-y-1 transition-transform duration-300">
+                <div className="flex justify-between items-start mb-4">
+                  <h3 className="text-xl font-bold text-white tracking-tight">{campaign.name}</h3>
                   <span
-                    className={`text-xs font-medium ${campaign.isActive
-                      ? 'text-primary-600'
-                      : 'text-primary-400'
+                    className={`text-xs font-medium px-2 py-0.5 rounded-full border ${campaign.isActive
+                        ? 'bg-[#1f6feb]/10 text-[#58a6ff] border-[#1f6feb]/20'
+                        : 'bg-[#30363d]/50 text-[#8b949e] border-[#30363d]'
                       }`}
                   >
                     {campaign.isActive ? 'Active' : 'Inactive'}
                   </span>
                 </div>
-                <p className="text-primary-600 mb-6 text-sm">{campaign.description || 'No description'}</p>
-                <div className="text-sm text-primary-500 space-y-2 mb-6">
-                  <p>Start: {formatDate(campaign.startDate)}</p>
-                  <p>End: {formatDate(campaign.endDate)}</p>
+                <p className="text-[#8b949e] mb-6 text-sm h-10 overflow-hidden text-ellipsis">{campaign.description || 'No description'}</p>
+                <div className="text-sm text-[#8b949e] space-y-1 mb-6 border-t border-[#30363d] pt-4">
+                  <p className="flex justify-between"><span>Start:</span> <span className="text-[#c9d1d9]">{formatDate(campaign.startDate)}</span></p>
+                  <p className="flex justify-between"><span>End:</span> <span className="text-[#c9d1d9]">{formatDate(campaign.endDate)}</span></p>
                 </div>
                 {user?.role === 'admin' && (
-                  <div className="flex space-x-6">
+                  <div className="flex space-x-4 pt-4 border-t border-[#30363d]">
                     <Link
                       to={`/campaigns/edit/${campaign._id}`}
-                      className="text-primary-700 text-sm font-medium hover:text-primary-900 transition-colors"
+                      className="text-[#58a6ff] text-sm font-medium hover:underline"
                     >
                       Edit
                     </Link>
                     <button
                       onClick={() => handleToggleActive(campaign)}
-                      className="text-primary-700 text-sm font-medium hover:text-primary-900 transition-colors"
+                      className="text-[#c9d1d9] text-sm font-medium hover:text-white transition-colors"
                     >
                       {campaign.isActive ? 'Deactivate' : 'Activate'}
                     </button>
                     <button
                       onClick={() => handleDelete(campaign._id)}
-                      className="text-primary-700 text-sm font-medium hover:text-primary-900 transition-colors"
+                      className="text-[#ff7b72] text-sm font-medium hover:text-[#ff9b8e] transition-colors ml-auto"
                     >
                       Delete
                     </button>
@@ -137,7 +137,7 @@ const CampaignList = () => {
               </div>
             ))
           ) : (
-            <div className="col-span-full text-center py-16 text-primary-500">
+            <div className="col-span-full text-center py-16 text-[#8b949e]">
               No campaigns found
             </div>
           )}
@@ -145,23 +145,23 @@ const CampaignList = () => {
       )}
 
       {pagination.pages > 1 && (
-        <div className="flex justify-center items-center space-x-6 pt-8 border-t border-primary-200">
+        <div className="flex justify-center items-center space-x-4 pt-8 border-t border-[#30363d]">
           <button
             onClick={() => setFilters({ ...filters, page: pagination.page - 1 })}
             disabled={pagination.page === 1}
-            className="text-primary-700 text-sm font-medium hover:text-primary-900 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            className="text-[#58a6ff] text-sm font-medium hover:underline disabled:opacity-50 disabled:no-underline disabled:text-[#8b949e] transition-colors"
           >
-            Previous
+            ← Previous
           </button>
-          <span className="text-primary-600 text-sm">
+          <span className="text-[#c9d1d9] text-sm">
             Page {pagination.page} of {pagination.pages}
           </span>
           <button
             onClick={() => setFilters({ ...filters, page: pagination.page + 1 })}
             disabled={pagination.page === pagination.pages}
-            className="text-primary-700 text-sm font-medium hover:text-primary-900 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            className="text-[#58a6ff] text-sm font-medium hover:underline disabled:opacity-50 disabled:no-underline disabled:text-[#8b949e] transition-colors"
           >
-            Next
+            Next →
           </button>
         </div>
       )}

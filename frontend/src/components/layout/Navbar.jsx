@@ -30,16 +30,16 @@ const Navbar = () => {
   const handleLogout = async () => {
     disconnectSocket();
     await dispatch(logout());
-    navigate('/login');
+    navigate('/');
   };
 
   return (
-    <nav className="bg-white border-b border-primary-200">
+    <nav className="bg-[#161b22]/80 backdrop-blur-md border-b border-[#30363d] sticky top-0 z-50">
       <div className="container mx-auto px-6 max-w-7xl">
-        <div className="flex justify-between items-center py-6">
+        <div className="flex justify-between items-center py-4">
           {/* Logo/Brand */}
-          <Link to="/" className="text-2xl font-bold text-primary-900 tracking-tight hover:opacity-70 transition-opacity">
-            Coupon Manager
+          <Link to="/" className="text-2xl font-bold text-white tracking-tight hover:opacity-70 transition-opacity">
+            Coupon Pulse
           </Link>
 
           {/* Navigation Links */}
@@ -47,26 +47,26 @@ const Navbar = () => {
             <div className="flex items-center space-x-8">
               <Link
                 to="/dashboard"
-                className="text-primary-700 text-sm font-medium hover:text-primary-900 transition-colors"
+                className="text-[#c9d1d9] text-sm font-medium hover:text-white transition-colors"
               >
                 Dashboard
               </Link>
               <Link
                 to="/coupons"
-                className="text-primary-700 text-sm font-medium hover:text-primary-900 transition-colors"
+                className="text-[#c9d1d9] text-sm font-medium hover:text-white transition-colors"
               >
                 Coupons
               </Link>
               <Link
                 to="/campaigns"
-                className="text-primary-700 text-sm font-medium hover:text-primary-900 transition-colors"
+                className="text-[#c9d1d9] text-sm font-medium hover:text-white transition-colors"
               >
                 Campaigns
               </Link>
               {user?.role === 'admin' && (
                 <Link
                   to="/coupons/new"
-                  className="text-primary-700 text-sm font-medium hover:text-primary-900 transition-colors"
+                  className="text-[#c9d1d9] text-sm font-medium hover:text-white transition-colors"
                 >
                   New Coupon
                 </Link>
@@ -74,7 +74,7 @@ const Navbar = () => {
               {user?.role === 'admin' && (
                 <Link
                   to="/admin/orders"
-                  className="text-primary-700 text-sm font-medium hover:text-primary-900 transition-colors"
+                  className="text-[#c9d1d9] text-sm font-medium hover:text-white transition-colors"
                 >
                   All Orders
                 </Link>
@@ -83,13 +83,13 @@ const Navbar = () => {
                 <>
                   <Link
                     to="/checkout"
-                    className="text-primary-700 text-sm font-medium hover:text-primary-900 transition-colors"
+                    className="text-[#c9d1d9] text-sm font-medium hover:text-white transition-colors"
                   >
                     Checkout
                   </Link>
                   <Link
                     to="/orders"
-                    className="text-primary-700 text-sm font-medium hover:text-primary-900 transition-colors"
+                    className="text-[#c9d1d9] text-sm font-medium hover:text-white transition-colors"
                   >
                     Orders
                   </Link>
@@ -97,13 +97,13 @@ const Navbar = () => {
               )}
 
               {/* User Info & Logout */}
-              <div className="flex items-center space-x-6 ml-6 pl-6 border-l border-primary-200">
-                <span className="text-primary-600 text-sm">
+              <div className="flex items-center space-x-6 ml-6 pl-6 border-l border-[#30363d]">
+                <span className="text-[#8b949e] text-sm">
                   {user?.username}
                 </span>
                 <button
                   onClick={handleLogout}
-                  className="text-primary-700 text-sm font-medium hover:text-primary-900 transition-colors"
+                  className="text-[#c9d1d9] text-sm font-medium hover:text-white transition-colors"
                 >
                   Logout
                 </button>
@@ -113,13 +113,13 @@ const Navbar = () => {
             <div className="flex items-center space-x-6">
               <Link
                 to="/login"
-                className="text-primary-700 text-sm font-medium hover:text-primary-900 transition-colors"
+                className="text-white text-sm font-medium hover:text-[#c9d1d9] transition-colors"
               >
                 Login
               </Link>
               <Link
                 to="/register"
-                className="bg-primary-900 text-white px-6 py-2 text-sm font-medium hover:bg-primary-800 transition-colors"
+                className="bg-[#238636] text-white px-6 py-2 rounded-md text-sm font-bold hover:bg-[#2ea043] border border-[rgba(240,246,252,0.1)] transition-colors shadow-sm"
               >
                 Register
               </Link>

@@ -81,13 +81,13 @@ const CouponList = () => {
   };
 
   return (
-    <div className="space-y-16">
-      <div className="flex justify-between items-end border-b border-primary-200 pb-4">
-        <h1 className="text-5xl font-bold text-primary-900 tracking-tight">Coupons</h1>
+    <div className="space-y-12">
+      <div className="flex justify-between items-end border-b border-[#30363d] pb-4">
+        <h1 className="text-4xl font-bold text-white tracking-tight">Coupons</h1>
         {user?.role === 'admin' && (
           <Link
             to="/coupons/new"
-            className="bg-primary-900 text-white px-8 py-3 text-sm font-medium hover:bg-primary-800 transition-colors"
+            className="bg-[#238636] text-white px-6 py-2.5 rounded-[6px] text-sm font-bold hover:bg-[#2ea043] border border-[rgba(240,246,252,0.1)] transition-colors shadow-sm"
           >
             Create New Coupon
           </Link>
@@ -95,17 +95,17 @@ const CouponList = () => {
       </div>
 
       {/* Filters */}
-      <div className="border-b border-primary-200 pb-6">
+      <div className="border-b border-[#30363d] pb-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
-            <label className="block text-sm font-medium text-primary-900 mb-3 tracking-tight">Status</label>
+            <label className="block text-sm font-semibold text-white mb-2">Status</label>
             <select
               name="isActive"
               value={filters.isActive}
               onChange={handleFilterChange}
-              className="w-full px-0 py-3 border-0 border-b border-primary-300 bg-transparent focus:outline-none focus:border-primary-900 text-primary-900 text-base"
+              className="w-full bg-[#0d1117] border border-[#30363d] rounded-[6px] px-3 py-2 text-white text-sm focus:outline-none focus:border-[#58a6ff] focus:ring-2 focus:ring-[#58a6ff]/30 transition-all shadow-sm"
             >
-              <option value="">All</option>
+              <option value="">All Statuses</option>
               <option value="true">Active</option>
               <option value="false">Inactive</option>
             </select>
@@ -115,7 +115,7 @@ const CouponList = () => {
 
       {/* Error Display */}
       {error && (
-        <div className="bg-primary-50 border border-primary-200 text-primary-800 px-6 py-4">
+        <div className="bg-[rgba(255,123,114,0.1)] border border-[rgba(255,123,114,0.4)] text-[#ff7b72] px-4 py-3 rounded-[6px] text-sm">
           {error}
         </div>
       )}
@@ -123,83 +123,84 @@ const CouponList = () => {
       {/* Loading State */}
       {isLoading && (
         <div className="text-center py-16">
-          <p className="text-primary-600">Loading coupons...</p>
+          <p className="text-[#8b949e]">Loading coupons...</p>
         </div>
       )}
 
       {/* Coupons List */}
       {!isLoading && (
-        <div className="overflow-hidden">
+        <div className="overflow-hidden border border-[#30363d] rounded-[6px] bg-[#0d1117]">
           <table className="min-w-full">
-            <thead className="border-b border-primary-200">
+            <thead className="bg-[#161b22] border-b border-[#30363d]">
               <tr>
-                <th className="px-0 py-4 text-left text-xs font-medium text-primary-600 uppercase tracking-wider">Code</th>
-                <th className="px-0 py-4 text-left text-xs font-medium text-primary-600 uppercase tracking-wider">Description</th>
-                <th className="px-0 py-4 text-left text-xs font-medium text-primary-600 uppercase tracking-wider">Discount</th>
-                <th className="px-0 py-4 text-left text-xs font-medium text-primary-600 uppercase tracking-wider">Usage</th>
-                <th className="px-0 py-4 text-left text-xs font-medium text-primary-600 uppercase tracking-wider">Expiry</th>
-                <th className="px-0 py-4 text-left text-xs font-medium text-primary-600 uppercase tracking-wider">Status</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-[#8b949e] uppercase tracking-wider">Code</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-[#8b949e] uppercase tracking-wider">Description</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-[#8b949e] uppercase tracking-wider">Discount</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-[#8b949e] uppercase tracking-wider">Usage</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-[#8b949e] uppercase tracking-wider">Expiry</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-[#8b949e] uppercase tracking-wider">Status</th>
                 {user?.role === 'admin' && (
-                  <th className="px-0 py-4 text-left text-xs font-medium text-primary-600 uppercase tracking-wider">Actions</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-[#8b949e] uppercase tracking-wider">Actions</th>
                 )}
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-[#30363d]">
               {coupons.length > 0 ? (
                 coupons.map((coupon) => (
-                  <tr key={coupon._id} className="border-b border-primary-100 hover:opacity-70 transition-opacity">
-                    <td className="px-0 py-4 whitespace-nowrap">
-                      <span className="font-mono font-semibold text-primary-900">{coupon.code}</span>
+                  <tr key={coupon._id} className="hover:bg-[#161b22]/50 transition-colors">
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <span className="font-mono font-bold text-white bg-[#30363d]/50 px-2 py-1 rounded text-sm border border-transparent">
+                        {coupon.code}
+                      </span>
                     </td>
-                    <td className="px-0 py-4">
-                      <div className="text-sm text-primary-900">{coupon.description || 'N/A'}</div>
+                    <td className="px-4 py-3">
+                      <div className="text-sm text-white font-medium">{coupon.description || 'N/A'}</div>
                       {coupon.campaignId && (
-                        <div className="text-xs text-primary-500 mt-1">
+                        <div className="text-xs text-[#8b949e] mt-1">
                           Campaign: {coupon.campaignId.name || 'N/A'}
                         </div>
                       )}
                     </td>
-                    <td className="px-0 py-4 whitespace-nowrap">
-                      <span className="text-sm text-primary-900">
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <span className="text-sm text-[#c9d1d9]">
                         {coupon.discountType === 'percentage'
                           ? `${coupon.discountValue}%`
                           : `$${coupon.discountValue}`}
                       </span>
                     </td>
-                    <td className="px-0 py-4 whitespace-nowrap text-sm text-primary-600">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-[#8b949e]">
                       {coupon.currentUsage} / {coupon.maxUsage || '∞'}
                     </td>
-                    <td className="px-0 py-4 whitespace-nowrap text-sm text-primary-600">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-[#8b949e]">
                       {formatDate(coupon.expiryDate)}
                     </td>
-                    <td className="px-0 py-4 whitespace-nowrap">
+                    <td className="px-4 py-3 whitespace-nowrap">
                       <span
-                        className={`text-xs font-medium ${
-                          coupon.isActive
-                            ? 'text-primary-600'
-                            : 'text-primary-400'
-                        }`}
+                        className={`text-xs font-medium px-2 py-0.5 rounded-full border ${coupon.isActive
+                            ? 'bg-[#238636]/10 text-[#3fb950] border-[#238636]/20'
+                            : 'bg-[#30363d]/50 text-[#8b949e] border-[#30363d]'
+                          }`}
                       >
                         {coupon.isActive ? 'Active' : 'Inactive'}
                       </span>
                     </td>
                     {user?.role === 'admin' && (
-                      <td className="px-0 py-4 whitespace-nowrap text-sm font-medium space-x-4">
+                      <td className="px-4 py-3 whitespace-nowrap text-sm font-medium space-x-3">
                         <Link
                           to={`/coupons/edit/${coupon._id}`}
-                          className="text-primary-700 hover:text-primary-900 transition-colors"
+                          className="text-[#58a6ff] hover:underline"
                         >
                           Edit
                         </Link>
                         <button
                           onClick={() => handleToggleActive(coupon)}
-                          className="text-primary-700 hover:text-primary-900 transition-colors"
+                          className="text-[#c9d1d9] hover:text-white transition-colors"
                         >
                           {coupon.isActive ? 'Deactivate' : 'Activate'}
                         </button>
                         <button
                           onClick={() => handleDelete(coupon._id)}
-                          className="text-primary-700 hover:text-primary-900 transition-colors"
+                          className="text-[#ff7b72] hover:text-[#ff9b8e] transition-colors"
                         >
                           Delete
                         </button>
@@ -209,7 +210,7 @@ const CouponList = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="7" className="px-0 py-16 text-center text-primary-500">
+                  <td colSpan="7" className="px-4 py-16 text-center text-[#8b949e] italic">
                     No coupons found
                   </td>
                 </tr>
@@ -221,23 +222,23 @@ const CouponList = () => {
 
       {/* Pagination */}
       {pagination.pages > 1 && (
-        <div className="flex justify-center items-center space-x-6 pt-8 border-t border-primary-200">
+        <div className="flex justify-center items-center space-x-4 pt-6 border-t border-[#30363d]">
           <button
             onClick={() => handlePageChange(pagination.page - 1)}
             disabled={pagination.page === 1}
-            className="text-primary-700 text-sm font-medium hover:text-primary-900 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            className="text-[#58a6ff] text-sm font-medium hover:underline disabled:opacity-50 disabled:no-underline disabled:text-[#8b949e] transition-colors"
           >
-            Previous
+            ← Previous
           </button>
-          <span className="text-primary-600 text-sm">
+          <span className="text-[#c9d1d9] text-sm">
             Page {pagination.page} of {pagination.pages}
           </span>
           <button
             onClick={() => handlePageChange(pagination.page + 1)}
             disabled={pagination.page === pagination.pages}
-            className="text-primary-700 text-sm font-medium hover:text-primary-900 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+            className="text-[#58a6ff] text-sm font-medium hover:underline disabled:opacity-50 disabled:no-underline disabled:text-[#8b949e] transition-colors"
           >
-            Next
+            Next →
           </button>
         </div>
       )}
