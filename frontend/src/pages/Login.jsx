@@ -85,7 +85,7 @@ export default function Login() {
       {/* Header - Logo Removed */}
       <div className="mb-8 text-center z-10">
         <h1 className="text-[28px] font-bold text-white tracking-tight">
-          {isLogin ? "Sign in to CouponPulse" : "Join CouponPulse"}
+          {isLogin ? "Sign in to COUPON PULSE" : "Join COUPON PULSE"}
         </h1>
       </div>
 
@@ -208,7 +208,7 @@ export default function Login() {
           {/* Consolidated Links Section */}
           <div className="mt-8 pt-6 border-t border-[#30363d] flex flex-col gap-4 text-center">
             <p className="text-[14px] text-[#8b949e]">
-              {isLogin ? "New to CouponPulse? " : "Already have an account? "}
+              {isLogin ? "New to COUPON PULSE? " : "Already have an account? "}
               <button
                 onClick={handleModeSwitch}
                 className="text-[#58a6ff] hover:underline decoration-[#58a6ff] font-medium"
@@ -219,7 +219,7 @@ export default function Login() {
             </p>
 
             <Link to="/" className="text-[12px] text-[#58a6ff] opacity-80 hover:opacity-100 hover:underline transition-all">
-              &larr; Back to CouponPulse
+              &larr; Back to COUPON PULSE
             </Link>
           </div>
 

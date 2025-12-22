@@ -39,7 +39,7 @@ const Navbar = () => {
         <div className="flex justify-between items-center py-4">
           {/* Logo/Brand */}
           <Link to="/" className="text-2xl font-bold text-white tracking-tight hover:opacity-70 transition-opacity">
-            Coupon Pulse
+            COUPON PULSE
           </Link>
 
           {/* Navigation Links */}
@@ -127,7 +127,7 @@ const Navbar = () => {
           )}
         </div>
       </div>
-    </nav>
+    </nav >
   );
 };
 

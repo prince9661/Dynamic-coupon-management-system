@@ -50,24 +50,23 @@ export default {
           light: '#4a4a4a',
         },
       },
-      theme: {
-        extend: {
-          '18': '4.5rem',
-          '22': '5.5rem',
-          '26': '6.5rem',
-          '30': '7.5rem',
-        },
-        letterSpacing: {
-          tighter: '-0.03em',
-          tight: '-0.02em',
-        },
-        boxShadow: {
-          'minimal': '0 1px 3px 0 rgba(0, 0, 0, 0.05)',
-          'soft': '0 2px 8px 0 rgba(0, 0, 0, 0.04)',
-        },
+      spacing: {
+        '18': '4.5rem',
+        '22': '5.5rem',
+        '26': '6.5rem',
+        '30': '7.5rem',
+      },
+      letterSpacing: {
+        tighter: '-0.03em',
+        tight: '-0.02em',
+      },
+      boxShadow: {
+        'minimal': '0 1px 3px 0 rgba(0, 0, 0, 0.05)',
+        'soft': '0 2px 8px 0 rgba(0, 0, 0, 0.04)',
       },
     },
     plugins: [],
   }
 
 
+}

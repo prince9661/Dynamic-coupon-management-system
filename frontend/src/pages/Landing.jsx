@@ -75,7 +75,7 @@ export default function Landing() {
                         </h1>
 
                         <p className="text-[20px] md:text-[24px] text-[#8b949e] leading-relaxed mb-10 max-w-[600px]">
-                            CouponPulse is a real-time coupon management system built for developers.
+                            COUPON PULSE is a real-time coupon management system built for developers.
                             Create, validate, and track usage securely and instantly.
                         </p>
 
@@ -94,7 +94,7 @@ export default function Landing() {
                                         className="flex-1 bg-transparent text-[#0d1117] placeholder-[#57606a] outline-none text-[16px]"
                                     />
                                     <Link to="/register" className="bg-[#238636] text-white font-bold px-6 py-3 rounded-md hover:bg-[#2ea043] transition-colors whitespace-nowrap">
-                                        Sign up for CouponPulse
+                                        Sign up for COUPON PULSE
                                     </Link>
                                 </div>
                             )}
@@ -115,9 +115,9 @@ export default function Landing() {
                             </div>
                             {/* Code */}
                             <div className="font-mono text-[14px]">
-                                <div className="text-[#8b949e]">import</div> <div className="text-white inline">CouponPulse</div> <div className="text-[#8b949e] inline">from</div> <div className="text-[#a5d6ff] inline">'@couponpulse/sdk'</div>;
+                                <div className="text-[#8b949e]">import</div> <div className="text-white inline">COUPON PULSE</div> <div className="text-[#8b949e] inline">from</div> <div className="text-[#a5d6ff] inline">'@couponpulse/sdk'</div>;
                                 <br /><br />
-                                <div className="text-[#ff7b72]">const</div> <div className="text-[#d2a8ff] inline">client</div> = <div className="text-[#ff7b72]">new</div> <div className="text-[#f0883e] inline">CouponPulse</div>({'{'}
+                                <div className="text-[#ff7b72]">const</div> <div className="text-[#d2a8ff] inline">client</div> = <div className="text-[#ff7b72]">new</div> <div className="text-[#f0883e] inline">COUPON PULSE</div>({'{'}
                                 <div className="pl-4 text-[#79c0ff]">apiKey</div>: <div className="text-[#a5d6ff] inline">'cp_live_...'</div>
                                 {'}'});
                                 <br /><br />
@@ -192,7 +192,7 @@ export default function Landing() {
                 <div className="max-w-[1280px] mx-auto">
                     <div className="mb-16 text-center">
                         <h2 className="text-[40px] font-semibold text-white mb-4">Meet the Creators</h2>
-                        <p className="text-[#8b949e] text-[20px]">The team behind CouponPulse.</p>
+                        <p className="text-[#8b949e] text-[20px]">The team behind COUPON PULSE.</p>
                     </div>
 
                     <div className="flex flex-wrap justify-center gap-12">
@@ -302,7 +302,7 @@ export default function Landing() {
                 <div className="max-w-[1280px] mx-auto grid md:grid-cols-4 gap-8 mb-8">
                     <div>
                         <div className="flex items-center gap-2 mb-4 text-[#8b949e]">
-                            <span className="text-[12px]">© 2025 CouponPulse System</span>
+                            <span className="text-[12px]">© 2025 COUPON PULSE System</span>
                         </div>
                     </div>
                 </div>
