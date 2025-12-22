@@ -45,17 +45,7 @@ const Checkout = () => {
       }
     };
 
-    const handleCouponUsed = (data) => {
-      console.log('Coupon used in real-time:', data);
-      if (data.data.couponCode === couponCode) {
-        alert('This coupon was just used by another user!');
-        setValidationResult(null);
-        setAppliedCoupon(null);
-      }
-    };
-
     onCouponValidation(handleValidation);
-    onCouponUsed(handleCouponUsed);
 
     return () => {
       // Cleanup
@@ -75,8 +65,8 @@ const Checkout = () => {
     setIsValidating(true);
     setValidationResult(null);
 
-    // Try Socket.IO validation first
-    validateCouponSocket(couponCode, parseFloat(orderAmount));
+    // Socket.IO validation removed to prevent race condition with API
+    // validateCouponSocket(couponCode, parseFloat(orderAmount));
 
     // Also validate via API as fallback
     try {
@@ -199,11 +189,10 @@ const Checkout = () => {
         {/* Validation Result */}
         {validationResult && (
           <div
-            className={`p-6 border ${
-              validationResult.valid
-                ? 'border-primary-200 bg-primary-50'
-                : 'border-primary-200 bg-primary-50'
-            }`}
+            className={`p-6 border ${validationResult.valid
+              ? 'border-primary-200 bg-primary-50'
+              : 'border-primary-200 bg-primary-50'
+              }`}
           >
             {validationResult.valid ? (
               <div className="space-y-4">

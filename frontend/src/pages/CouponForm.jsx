@@ -128,7 +128,7 @@ const CouponForm = () => {
    */
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validate()) {
       return;
     }
@@ -143,6 +143,16 @@ const CouponForm = () => {
         maxDiscountAmount: formData.maxDiscountAmount ? parseFloat(formData.maxDiscountAmount) : null,
         maxUsage: formData.maxUsage ? parseInt(formData.maxUsage) : null,
       };
+
+      if (!submitData.startDate) delete submitData.startDate;
+      if (!submitData.maxUsage) submitData.maxUsage = null;
+
+      // Clean up empty strings
+      Object.keys(submitData).forEach(key => {
+        if (submitData[key] === '') {
+          delete submitData[key];
+        }
+      });
 
       if (isEditMode) {
         await dispatch(updateCoupon({ id, data: submitData }));
@@ -177,9 +187,8 @@ const CouponForm = () => {
             value={formData.code}
             onChange={handleChange}
             disabled={isEditMode}
-            className={`w-full px-0 py-3 border-0 border-b bg-transparent focus:outline-none text-primary-900 placeholder-primary-400 text-base ${
-              errors.code ? 'border-primary-500' : 'border-primary-300 focus:border-primary-900'
-            } disabled:opacity-50`}
+            className={`w-full px-0 py-3 border-0 border-b bg-transparent focus:outline-none text-primary-900 placeholder-primary-400 text-base ${errors.code ? 'border-primary-500' : 'border-primary-300 focus:border-primary-900'
+              } disabled:opacity-50`}
             placeholder="e.g., SAVE20"
           />
           {errors.code && <p className="text-primary-600 text-sm mt-2">{errors.code}</p>}
@@ -231,9 +240,8 @@ const CouponForm = () => {
             onChange={handleChange}
             min="0"
             step={formData.discountType === 'percentage' ? '1' : '0.01'}
-            className={`w-full px-0 py-3 border-0 border-b bg-transparent focus:outline-none text-primary-900 placeholder-primary-400 text-base ${
-              errors.discountValue ? 'border-primary-500' : 'border-primary-300 focus:border-primary-900'
-            }`}
+            className={`w-full px-0 py-3 border-0 border-b bg-transparent focus:outline-none text-primary-900 placeholder-primary-400 text-base ${errors.discountValue ? 'border-primary-500' : 'border-primary-300 focus:border-primary-900'
+              }`}
           />
           {errors.discountValue && <p className="text-primary-600 text-sm mt-2">{errors.discountValue}</p>}
         </div>
@@ -298,9 +306,8 @@ const CouponForm = () => {
             name="campaignId"
             value={formData.campaignId}
             onChange={handleChange}
-            className={`w-full px-0 py-3 border-0 border-b bg-transparent focus:outline-none text-primary-900 text-base ${
-              errors.campaignId ? 'border-primary-500' : 'border-primary-300 focus:border-primary-900'
-            }`}
+            className={`w-full px-0 py-3 border-0 border-b bg-transparent focus:outline-none text-primary-900 text-base ${errors.campaignId ? 'border-primary-500' : 'border-primary-300 focus:border-primary-900'
+              }`}
           >
             <option value="">Select a campaign</option>
             {campaigns.map((campaign) => (
@@ -338,9 +345,8 @@ const CouponForm = () => {
             name="expiryDate"
             value={formData.expiryDate}
             onChange={handleChange}
-            className={`w-full px-0 py-3 border-0 border-b bg-transparent focus:outline-none text-primary-900 text-base ${
-              errors.expiryDate ? 'border-primary-500' : 'border-primary-300 focus:border-primary-900'
-            }`}
+            className={`w-full px-0 py-3 border-0 border-b bg-transparent focus:outline-none text-primary-900 text-base ${errors.expiryDate ? 'border-primary-500' : 'border-primary-300 focus:border-primary-900'
+              }`}
           />
           {errors.expiryDate && <p className="text-primary-600 text-sm mt-2">{errors.expiryDate}</p>}
         </div>

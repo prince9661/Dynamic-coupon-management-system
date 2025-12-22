@@ -38,7 +38,7 @@ const couponSchema = new mongoose.Schema({
     required: [true, 'Discount value is required'],
     min: [0, 'Discount value cannot be negative'],
     validate: {
-      validator: function(value) {
+      validator: function (value) {
         if (this.discountType === 'percentage') {
           return value <= 100;
         }
@@ -100,23 +100,23 @@ couponSchema.index({ expiryDate: 1 });
 couponSchema.index({ isActive: 1, expiryDate: 1 });
 
 // Virtual for checking if coupon is valid
-couponSchema.virtual('isValid').get(function() {
+couponSchema.virtual('isValid').get(function () {
   const now = new Date();
   const isNotExpired = now <= this.expiryDate;
   const isStarted = now >= this.startDate;
   const hasUsageLeft = !this.maxUsage || this.currentUsage < this.maxUsage;
-  
+
   return this.isActive && isNotExpired && isStarted && hasUsageLeft;
 });
 
 // Method to calculate discount amount
-couponSchema.methods.calculateDiscount = function(amount) {
+couponSchema.methods.calculateDiscount = function (amount) {
   if (amount < this.minPurchaseAmount) {
     return 0;
   }
 
   let discount = 0;
-  
+
   if (this.discountType === 'percentage') {
     discount = (amount * this.discountValue) / 100;
     if (this.maxDiscountAmount) {
@@ -130,15 +130,15 @@ couponSchema.methods.calculateDiscount = function(amount) {
 };
 
 // Method to check if coupon can be used
-couponSchema.methods.canBeUsed = function(amount) {
+couponSchema.methods.canBeUsed = function (amount) {
   if (!this.isValid) {
     return { canUse: false, reason: 'Coupon is not valid' };
   }
-  
+
   if (amount < this.minPurchaseAmount) {
-    return { 
-      canUse: false, 
-      reason: `Minimum purchase amount of ${this.minPurchaseAmount} required` 
+    return {
+      canUse: false,
+      reason: `Minimum purchase amount of ${this.minPurchaseAmount} required`
     };
   }
 
@@ -150,7 +150,7 @@ couponSchema.methods.canBeUsed = function(amount) {
 };
 
 // Static method to find active coupons
-couponSchema.statics.findActive = function() {
+couponSchema.statics.findActive = function () {
   const now = new Date();
   return this.find({
     isActive: true,
@@ -164,18 +164,11 @@ couponSchema.statics.findActive = function() {
 };
 
 // Static method to find coupon by code
-couponSchema.statics.findByCode = function(code) {
+couponSchema.statics.findByCode = function (code) {
   return this.findOne({ code: code.toUpperCase() });
 };
 
-// Pre-save hook to validate dates
-couponSchema.pre('save', function(next) {
-  if (this.startDate >= this.expiryDate) {
-    next(new Error('Expiry date must be after start date'));
-  } else {
-    next();
-  }
-});
+// Pre-save hook removed to prevent issues with same-day coupons (Time vs Date comparison)
 
 const Coupon = mongoose.model('Coupon', couponSchema);
 

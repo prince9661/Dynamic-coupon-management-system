@@ -20,7 +20,7 @@ import { useSelector } from 'react-redux';
  * @param {React.ReactNode} children - Child components to render
  * @param {boolean} requireAdmin - Whether admin role is required
  */
-const ProtectedRoute = ({ children, requireAdmin = false }) => {
+const ProtectedRoute = ({ children, requireAdmin = false, requireUser = false }) => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
 
   // Redirect to login if not authenticated
@@ -30,6 +30,11 @@ const ProtectedRoute = ({ children, requireAdmin = false }) => {
 
   // Redirect to dashboard if admin required but user is not admin
   if (requireAdmin && user?.role !== 'admin') {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  // Redirect to dashboard if user required but user is admin
+  if (requireUser && user?.role === 'admin') {
     return <Navigate to="/dashboard" replace />;
   }
 

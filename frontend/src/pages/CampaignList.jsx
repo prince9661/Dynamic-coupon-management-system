@@ -11,7 +11,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { fetchCampaigns, deleteCampaign } from '../store/slices/campaignSlice.js';
+import { fetchCampaigns, deleteCampaign, updateCampaign } from '../store/slices/campaignSlice.js';
 
 const CampaignList = () => {
   const dispatch = useDispatch();
@@ -40,6 +40,15 @@ const CampaignList = () => {
       await dispatch(deleteCampaign(id));
       dispatch(fetchCampaigns(filters));
     }
+  };
+
+  const handleToggleActive = async (campaign) => {
+    await dispatch(updateCampaign({
+      id: campaign._id,
+      data: { isActive: !campaign.isActive }
+    }));
+    // We don't need to refetch if the store updates properly, but for safety with filters:
+    dispatch(fetchCampaigns(filters));
   };
 
   const formatDate = (dateString) => {
@@ -90,11 +99,10 @@ const CampaignList = () => {
                 <div className="flex justify-between items-start mb-6">
                   <h3 className="text-xl font-bold text-primary-900 tracking-tight">{campaign.name}</h3>
                   <span
-                    className={`text-xs font-medium ${
-                      campaign.isActive
-                        ? 'text-primary-600'
-                        : 'text-primary-400'
-                    }`}
+                    className={`text-xs font-medium ${campaign.isActive
+                      ? 'text-primary-600'
+                      : 'text-primary-400'
+                      }`}
                   >
                     {campaign.isActive ? 'Active' : 'Inactive'}
                   </span>
@@ -112,6 +120,12 @@ const CampaignList = () => {
                     >
                       Edit
                     </Link>
+                    <button
+                      onClick={() => handleToggleActive(campaign)}
+                      className="text-primary-700 text-sm font-medium hover:text-primary-900 transition-colors"
+                    >
+                      {campaign.isActive ? 'Deactivate' : 'Activate'}
+                    </button>
                     <button
                       onClick={() => handleDelete(campaign._id)}
                       className="text-primary-700 text-sm font-medium hover:text-primary-900 transition-colors"

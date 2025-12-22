@@ -39,7 +39,7 @@ const orderSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['pending', 'completed', 'cancelled'],
+    enum: ['pending', 'accepted', 'rejected', 'completed', 'cancelled'],
     default: 'pending'
   }
 }, {
@@ -53,15 +53,15 @@ orderSchema.index({ couponCode: 1 });
 orderSchema.index({ status: 1 });
 
 // Virtual for formatted date
-orderSchema.virtual('formattedDate').get(function() {
+orderSchema.virtual('formattedDate').get(function () {
   return this.createdAt.toLocaleString();
 });
 
 // Static method to find orders by user
-orderSchema.statics.findByUser = function(userId, options = {}) {
+orderSchema.statics.findByUser = function (userId, options = {}) {
   const { page = 1, limit = 10 } = options;
   const skip = (page - 1) * limit;
-  
+
   return this.find({ userId })
     .populate('userId', 'username email')
     .sort({ createdAt: -1 })
@@ -71,10 +71,10 @@ orderSchema.statics.findByUser = function(userId, options = {}) {
 };
 
 // Static method to find all orders (for admin)
-orderSchema.statics.findAll = function(options = {}) {
+orderSchema.statics.findAll = function (options = {}) {
   const { page = 1, limit = 10 } = options;
   const skip = (page - 1) * limit;
-  
+
   return this.find()
     .populate('userId', 'username email')
     .sort({ createdAt: -1 })

@@ -53,6 +53,21 @@ export const applyCoupon = createAsyncThunk(
   }
 );
 
+// Async thunk to update order status
+export const updateOrderStatus = createAsyncThunk(
+  'orders/updateStatus',
+  async ({ orderId, status }, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(`${API_URL}/orders/${orderId}`, { status }, {
+        withCredentials: true
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.error || 'Failed to update order status');
+    }
+  }
+);
+
 const initialState = {
   orders: [],
   currentOrder: null,
@@ -95,6 +110,14 @@ const orderSlice = createSlice({
       .addCase(createOrder.fulfilled, (state, action) => {
         state.currentOrder = action.payload;
         state.orders.unshift(action.payload);
+      })
+      .addCase(updateOrderStatus.fulfilled, (state, action) => {
+        state.isLoading = false;
+        // Update the order in the list
+        const index = state.orders.findIndex(o => o._id === action.payload.order.id);
+        if (index !== -1) {
+          state.orders[index] = { ...state.orders[index], status: action.payload.order.status };
+        }
       });
   },
 });

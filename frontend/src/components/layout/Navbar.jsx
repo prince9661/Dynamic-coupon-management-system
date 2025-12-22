@@ -71,19 +71,31 @@ const Navbar = () => {
                   New Coupon
                 </Link>
               )}
-              <Link
-                to="/checkout"
-                className="text-primary-700 text-sm font-medium hover:text-primary-900 transition-colors"
-              >
-                Checkout
-              </Link>
-              <Link
-                to="/orders"
-                className="text-primary-700 text-sm font-medium hover:text-primary-900 transition-colors"
-              >
-                Orders
-              </Link>
-              
+              {user?.role === 'admin' && (
+                <Link
+                  to="/admin/orders"
+                  className="text-primary-700 text-sm font-medium hover:text-primary-900 transition-colors"
+                >
+                  All Orders
+                </Link>
+              )}
+              {user?.role !== 'admin' && (
+                <>
+                  <Link
+                    to="/checkout"
+                    className="text-primary-700 text-sm font-medium hover:text-primary-900 transition-colors"
+                  >
+                    Checkout
+                  </Link>
+                  <Link
+                    to="/orders"
+                    className="text-primary-700 text-sm font-medium hover:text-primary-900 transition-colors"
+                  >
+                    Orders
+                  </Link>
+                </>
+              )}
+
               {/* User Info & Logout */}
               <div className="flex items-center space-x-6 ml-6 pl-6 border-l border-primary-200">
                 <span className="text-primary-600 text-sm">

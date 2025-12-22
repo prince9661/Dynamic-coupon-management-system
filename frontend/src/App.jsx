@@ -29,6 +29,7 @@ import CampaignList from './pages/CampaignList.jsx';
 import CampaignForm from './pages/CampaignForm.jsx';
 import Checkout from './pages/Checkout.jsx';
 import Orders from './pages/Orders.jsx';
+import AdminOrders from './pages/AdminOrders.jsx';
 
 /**
  * App Component (Functional Component)
@@ -119,7 +120,7 @@ function App() {
           <Route
             path="/checkout"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute requireUser>
                 <Checkout />
               </ProtectedRoute>
             }
@@ -127,8 +128,16 @@ function App() {
           <Route
             path="/orders"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute requireUser>
                 <Orders />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/orders"
+            element={
+              <ProtectedRoute requireAdmin>
+                <AdminOrders />
               </ProtectedRoute>
             }
           />

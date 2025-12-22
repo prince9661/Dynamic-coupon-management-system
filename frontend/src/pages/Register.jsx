@@ -80,7 +80,7 @@ const Register = () => {
 
     const { confirmPassword, ...registerData } = formData;
     const result = await dispatch(register(registerData));
-    
+
     if (register.fulfilled.match(result)) {
       navigate('/dashboard');
     }
@@ -93,7 +93,7 @@ const Register = () => {
           <h1 className="text-5xl font-bold text-primary-900 tracking-tight mb-4">Register</h1>
           <p className="text-primary-600 text-sm">Create your account to get started</p>
         </div>
-        
+
         {(error || validationError) && (
           <div className="bg-primary-50 border border-primary-200 text-primary-800 px-6 py-4 mb-8">
             {error || validationError}
@@ -131,6 +131,22 @@ const Register = () => {
               className="w-full px-0 py-3 border-0 border-b border-primary-300 bg-transparent focus:outline-none focus:border-primary-900 text-primary-900 placeholder-primary-400 text-base"
               placeholder="Enter your email"
             />
+          </div>
+
+          <div>
+            <label htmlFor="role" className="block text-sm font-medium text-primary-900 mb-3 tracking-tight">
+              Role
+            </label>
+            <select
+              id="role"
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              className="w-full px-0 py-3 border-0 border-b border-primary-300 bg-transparent focus:outline-none focus:border-primary-900 text-primary-900 text-base"
+            >
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </select>
           </div>
 
           <div>

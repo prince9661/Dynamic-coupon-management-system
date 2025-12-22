@@ -51,37 +51,36 @@ const Orders = () => {
             <tbody>
               {orders.length > 0 ? (
                 orders.map((order) => (
-                  <tr key={order.id} className="border-b border-primary-100 hover:opacity-70 transition-opacity">
+                  <tr key={order._id} className="border-b border-primary-100 hover:opacity-70 transition-opacity">
                     <td className="px-0 py-4 whitespace-nowrap text-sm font-medium text-primary-900">
-                      #{order.id}
+                      #{order._id}
                     </td>
                     <td className="px-0 py-4 whitespace-nowrap text-sm text-primary-900">
-                      {order.coupon_code || 'N/A'}
+                      {order.couponCode || 'N/A'}
                     </td>
                     <td className="px-0 py-4 whitespace-nowrap text-sm text-primary-600">
-                      ${parseFloat(order.total_amount).toFixed(2)}
+                      ${parseFloat(order.totalAmount).toFixed(2)}
                     </td>
                     <td className="px-0 py-4 whitespace-nowrap text-sm text-primary-600">
-                      ${parseFloat(order.discount_amount || 0).toFixed(2)}
+                      ${parseFloat(order.discountAmount || 0).toFixed(2)}
                     </td>
                     <td className="px-0 py-4 whitespace-nowrap text-sm font-semibold text-primary-900">
-                      ${parseFloat(order.final_amount).toFixed(2)}
+                      ${parseFloat(order.finalAmount).toFixed(2)}
                     </td>
                     <td className="px-0 py-4 whitespace-nowrap">
                       <span
-                        className={`text-xs font-medium ${
-                          order.status === 'completed'
-                            ? 'text-primary-600'
-                            : order.status === 'pending'
+                        className={`text-xs font-medium ${order.status === 'completed'
+                          ? 'text-primary-600'
+                          : order.status === 'pending'
                             ? 'text-primary-500'
                             : 'text-primary-400'
-                        }`}
+                          }`}
                       >
                         {order.status}
                       </span>
                     </td>
                     <td className="px-0 py-4 whitespace-nowrap text-sm text-primary-500">
-                      {formatDate(order.created_at)}
+                      {formatDate(order.createdAt)}
                     </td>
                   </tr>
                 ))

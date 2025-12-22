@@ -29,13 +29,7 @@ const campaignSchema = new mongoose.Schema({
   },
   endDate: {
     type: Date,
-    required: [true, 'End date is required'],
-    validate: {
-      validator: function(value) {
-        return value > this.startDate;
-      },
-      message: 'End date must be after start date'
-    }
+    required: [true, 'End date is required']
   },
   isActive: {
     type: Boolean,
@@ -55,20 +49,20 @@ campaignSchema.index({ isActive: 1, endDate: 1 });
 campaignSchema.index({ startDate: 1, endDate: 1 });
 
 // Virtual for checking if campaign is currently active
-campaignSchema.virtual('isCurrentlyActive').get(function() {
+campaignSchema.virtual('isCurrentlyActive').get(function () {
   const now = new Date();
   return this.isActive && now >= this.startDate && now <= this.endDate;
 });
 
 // Method to get campaign statistics
-campaignSchema.methods.getStats = async function() {
+campaignSchema.methods.getStats = async function () {
   const Coupon = mongoose.model('Coupon');
   const totalCoupons = await Coupon.countDocuments({ campaignId: this._id });
-  const activeCoupons = await Coupon.countDocuments({ 
-    campaignId: this._id, 
-    isActive: true 
+  const activeCoupons = await Coupon.countDocuments({
+    campaignId: this._id,
+    isActive: true
   });
-  
+
   return {
     totalCoupons,
     activeCoupons,
