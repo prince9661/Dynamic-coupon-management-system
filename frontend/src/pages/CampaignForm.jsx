@@ -1,11 +1,4 @@
-/**
- * ============================================
- * UNIT IV - Forms: Campaign Creation/Edit Form
- * ============================================
- * 
- * Campaign Form Page:
- * - Create or edit campaign
- */
+// Campaign Form to create/edit campaigns
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';

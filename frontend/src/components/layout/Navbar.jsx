@@ -1,12 +1,4 @@
-/**
- * ============================================
- * UNIT II - Components: Navbar Component
- * ============================================
- * 
- * Navbar Component:
- * - Navigation bar for the application
- * - Demonstrates: Functional component, conditional rendering, React Router Link
- */
+// Navbar Component
 
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -14,19 +6,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../store/slices/authSlice.js';
 import { disconnectSocket } from '../../utils/socket.js';
 
-/**
- * Navbar Component (Functional Component)
- * Demonstrates: useState equivalent via Redux, event handling
- */
+// Navbar Component
 const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isAuthenticated, user } = useSelector((state) => state.auth);
 
-  /**
-   * Handle logout
-   * Demonstrates: Event handling, async actions
-   */
+  // Handle logout
   const handleLogout = async () => {
     disconnectSocket();
     await dispatch(logout());

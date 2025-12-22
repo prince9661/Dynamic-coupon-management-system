@@ -1,22 +1,11 @@
-/**
- * ============================================
- * UNIT V - HTTP & Data Fetching: Coupon List
- * ============================================
- * 
- * Coupon List Page:
- * - Displays all coupons with filtering
- * - Demonstrates: Data fetching, pagination, conditional rendering
- */
+// List all coupons
 
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchCoupons, deleteCoupon, activateCoupon, deactivateCoupon } from '../store/slices/couponSlice.js';
 
-/**
- * CouponList Component
- * Demonstrates: useEffect, useState, data fetching, array methods (map, filter)
- */
+// CouponList Component
 const CouponList = () => {
   const dispatch = useDispatch();
   const { coupons, pagination, isLoading, error } = useSelector((state) => state.coupons);
@@ -28,15 +17,12 @@ const CouponList = () => {
     page: 1,
   });
 
-  // Fetch coupons when filters change (UNIT III - useEffect)
+  // Fetch coupons when filters change
   useEffect(() => {
     dispatch(fetchCoupons(filters));
   }, [dispatch, filters]);
 
-  /**
-   * Handle filter change
-   * Demonstrates: Event handling, state updates
-   */
+  // Handle filter change
   const handleFilterChange = (e) => {
     setFilters({
       ...filters,
@@ -45,17 +31,12 @@ const CouponList = () => {
     });
   };
 
-  /**
-   * Handle pagination
-   */
+  // Handle pagination
   const handlePageChange = (newPage) => {
     setFilters({ ...filters, page: newPage });
   };
 
-  /**
-   * Handle delete
-   * Demonstrates: Async actions, confirmation
-   */
+  // Handle delete
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this coupon?')) {
       await dispatch(deleteCoupon(id));
@@ -63,9 +44,7 @@ const CouponList = () => {
     }
   };
 
-  /**
-   * Handle activate/deactivate
-   */
+  // Handle activate/deactivate
   const handleToggleActive = async (coupon) => {
     if (coupon.isActive) {
       await dispatch(deactivateCoupon(coupon._id));
@@ -75,7 +54,7 @@ const CouponList = () => {
     dispatch(fetchCoupons(filters));
   };
 
-  // Format date helper (UNIT I - JavaScript functions)
+  // Format date helper
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString();
   };
@@ -177,8 +156,8 @@ const CouponList = () => {
                     <td className="px-4 py-3 whitespace-nowrap">
                       <span
                         className={`text-xs font-medium px-2 py-0.5 rounded-full border ${coupon.isActive
-                            ? 'bg-[#238636]/10 text-[#3fb950] border-[#238636]/20'
-                            : 'bg-[#30363d]/50 text-[#8b949e] border-[#30363d]'
+                          ? 'bg-[#238636]/10 text-[#3fb950] border-[#238636]/20'
+                          : 'bg-[#30363d]/50 text-[#8b949e] border-[#30363d]'
                           }`}
                       >
                         {coupon.isActive ? 'Active' : 'Inactive'}

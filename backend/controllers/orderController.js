@@ -1,9 +1,7 @@
 
 import Order from '../models/Order.js';
 
-/**
- * Get all orders for current user (or all if admin)
- */
+// Get all orders for current user (or all if admin)
 export const getOrders = async (req, res) => {
     try {
         const { page = 1, limit = 10 } = req.query;
@@ -35,9 +33,7 @@ export const getOrders = async (req, res) => {
     }
 };
 
-/**
- * Get single order by ID
- */
+// Get single order by ID
 export const getOrderById = async (req, res) => {
     try {
         const order = await Order.findById(req.params.id)
@@ -60,9 +56,7 @@ export const getOrderById = async (req, res) => {
     }
 };
 
-/**
- * Create new order
- */
+// Create new order
 export const createOrder = async (req, res) => {
     try {
         const { totalAmount, couponCode } = req.body;
@@ -97,9 +91,7 @@ export const createOrder = async (req, res) => {
     }
 };
 
-/**
- * Update order
- */
+// Update order
 export const updateOrder = async (req, res) => {
     try {
         const { status } = req.body;

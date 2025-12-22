@@ -2,9 +2,7 @@
 import User from '../models/User.js';
 import { validationResult } from 'express-validator';
 
-/**
- * Register a new user
- */
+// Register a new user
 export const register = async (req, res) => {
     try {
         const errors = validationResult(req);
@@ -53,9 +51,7 @@ export const register = async (req, res) => {
     }
 };
 
-/**
- * Login user
- */
+// Login user
 export const login = async (req, res) => {
     try {
         const errors = validationResult(req);
@@ -98,9 +94,7 @@ export const login = async (req, res) => {
     }
 };
 
-/**
- * Logout user
- */
+// Logout user
 export const logout = (req, res) => {
     req.session.destroy((err) => {
         if (err) {
@@ -111,9 +105,7 @@ export const logout = (req, res) => {
     });
 };
 
-/**
- * Get current user info
- */
+// Get current user info
 export const getMe = (req, res) => {
     if (req.session && req.session.userId) {
         res.json({

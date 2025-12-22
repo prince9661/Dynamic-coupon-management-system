@@ -1,12 +1,4 @@
-/**
- * ============================================
- * UNIT IV - Forms: Coupon Creation/Edit Form
- * ============================================
- * 
- * Coupon Form Page:
- * - Create or edit coupon
- * - Demonstrates: Controlled inputs, form validation, async operations
- */
+// Coupon Form to create/edit coupons
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -14,10 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createCoupon, updateCoupon, fetchCouponById, fetchActiveCoupons } from '../store/slices/couponSlice.js';
 import { fetchCampaigns } from '../store/slices/campaignSlice.js';
 
-/**
- * CouponForm Component
- * Demonstrates: useState, useEffect, controlled inputs, form validation
- */
+// CouponForm Component
 const CouponForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -27,7 +16,7 @@ const CouponForm = () => {
   const { currentCoupon } = useSelector((state) => state.coupons);
   const { campaigns } = useSelector((state) => state.campaigns);
 
-  // Form state (UNIT III - useState)
+  // Form state
   const [formData, setFormData] = useState({
     code: '',
     description: '',
@@ -44,7 +33,7 @@ const CouponForm = () => {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Fetch coupon if editing (UNIT III - useEffect)
+  // Fetch coupon if editing
   useEffect(() => {
     if (isEditMode) {
       dispatch(fetchCouponById(id));
@@ -70,10 +59,7 @@ const CouponForm = () => {
     }
   }, [currentCoupon, isEditMode]);
 
-  /**
-   * Handle input change
-   * Demonstrates: Controlled input pattern
-   */
+  // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -89,10 +75,7 @@ const CouponForm = () => {
     }
   };
 
-  /**
-   * Validate form
-   * Demonstrates: Form validation logic
-   */
+  // Validate form
   const validate = () => {
     const newErrors = {};
 
@@ -122,10 +105,7 @@ const CouponForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  /**
-   * Handle form submission
-   * Demonstrates: Form submission, async actions
-   */
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 

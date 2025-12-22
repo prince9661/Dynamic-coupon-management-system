@@ -1,13 +1,4 @@
-/**
- * ============================================
- * UNIT V - Routing: Protected Routes
- * ============================================
- * 
- * Protected Route Component:
- * - Protects routes that require authentication
- * - Can also require admin role
- * - Demonstrates: Route protection, conditional rendering
- */
+// Protected Route Component
 
 import React from 'react';
 import { Navigate } from 'react-router-dom';
@@ -15,9 +6,7 @@ import { useSelector } from 'react-redux';
 
 /**
  * ProtectedRoute Component
- * Wraps routes that require authentication
- * 
- * @param {React.ReactNode} children - Child components to render
+ * @param {React.ReactNode} children - Child components
  * @param {boolean} requireAdmin - Whether admin role is required
  */
 const ProtectedRoute = ({ children, requireAdmin = false, requireUser = false }) => {

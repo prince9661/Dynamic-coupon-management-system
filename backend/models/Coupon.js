@@ -1,13 +1,4 @@
-/**
- * ============================================
- * UNIT IV - MongoDB & Mongoose: Coupon Schema
- * ============================================
- * 
- * Coupon Model:
- * - Core entity for coupon management
- * - Demonstrates: Schema definition, validation, methods, statics
- * - Relationships: Belongs to Campaign
- */
+// Coupon Model Schema
 
 import mongoose from 'mongoose';
 
@@ -93,7 +84,7 @@ const couponSchema = new mongoose.Schema({
   collection: 'coupons'
 });
 
-// Indexes for better query performance
+// Indexes
 couponSchema.index({ code: 1 });
 couponSchema.index({ campaignId: 1, isActive: 1 });
 couponSchema.index({ expiryDate: 1 });
@@ -109,7 +100,7 @@ couponSchema.virtual('isValid').get(function () {
   return this.isActive && isNotExpired && isStarted && hasUsageLeft;
 });
 
-// Method to calculate discount amount
+// Calculate discount amount
 couponSchema.methods.calculateDiscount = function (amount) {
   if (amount < this.minPurchaseAmount) {
     return 0;
@@ -129,7 +120,7 @@ couponSchema.methods.calculateDiscount = function (amount) {
   return Math.round(discount * 100) / 100; // Round to 2 decimal places
 };
 
-// Method to check if coupon can be used
+// Check if coupon can be used
 couponSchema.methods.canBeUsed = function (amount) {
   if (!this.isValid) {
     return { canUse: false, reason: 'Coupon is not valid' };
@@ -149,7 +140,7 @@ couponSchema.methods.canBeUsed = function (amount) {
   return { canUse: true };
 };
 
-// Static method to find active coupons
+// Find active coupons
 couponSchema.statics.findActive = function () {
   const now = new Date();
   return this.find({
@@ -163,7 +154,7 @@ couponSchema.statics.findActive = function () {
   });
 };
 
-// Static method to find coupon by code
+// Find coupon by code
 couponSchema.statics.findByCode = function (code) {
   return this.findOne({ code: code.toUpperCase() });
 };

@@ -1,28 +1,17 @@
-/**
- * ============================================
- * UNIT IV - Forms: Registration Form
- * ============================================
- * 
- * Register Page:
- * - User registration form
- * - Demonstrates: Controlled inputs, form validation
- */
+// Register Page
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { register, clearError } from '../store/slices/authSlice.js';
 
-/**
- * Register Component
- * Demonstrates: useState, controlled inputs, form handling
- */
+// Register Component
 const Register = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isLoading, error, isAuthenticated } = useSelector((state) => state.auth);
 
-  // Form state (UNIT III - useState)
+  // Form state
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -46,10 +35,7 @@ const Register = () => {
     };
   }, [dispatch]);
 
-  /**
-   * Handle input change
-   * Demonstrates: Controlled input pattern
-   */
+  // Handle input change
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -58,10 +44,7 @@ const Register = () => {
     setValidationError('');
   };
 
-  /**
-   * Handle form submission
-   * Demonstrates: Form validation, async actions
-   */
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(clearError());

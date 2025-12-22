@@ -1,12 +1,4 @@
-/**
- * ============================================
- * UNIT V - HTTP & Data Fetching: Campaign List
- * ============================================
- * 
- * Campaign List Page:
- * - Displays all campaigns
- * - Demonstrates: Data fetching, pagination
- */
+// List all campaigns
 
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -100,8 +92,8 @@ const CampaignList = () => {
                   <h3 className="text-xl font-bold text-white tracking-tight">{campaign.name}</h3>
                   <span
                     className={`text-xs font-medium px-2 py-0.5 rounded-full border ${campaign.isActive
-                        ? 'bg-[#1f6feb]/10 text-[#58a6ff] border-[#1f6feb]/20'
-                        : 'bg-[#30363d]/50 text-[#8b949e] border-[#30363d]'
+                      ? 'bg-[#1f6feb]/10 text-[#58a6ff] border-[#1f6feb]/20'
+                      : 'bg-[#30363d]/50 text-[#8b949e] border-[#30363d]'
                       }`}
                   >
                     {campaign.isActive ? 'Active' : 'Inactive'}

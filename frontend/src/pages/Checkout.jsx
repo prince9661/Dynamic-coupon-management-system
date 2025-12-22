@@ -1,13 +1,4 @@
-/**
- * ============================================
- * UNIT IV & V - Forms & HTTP: Checkout Page
- * ============================================
- * 
- * Checkout Page:
- * - Apply coupons to orders
- * - Real-time coupon validation
- * - Demonstrates: Form handling, Socket.IO, API calls
- */
+// Checkout Page
 
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,10 +6,7 @@ import { validateCoupon, fetchActiveCoupons } from '../store/slices/couponSlice.
 import { applyCoupon, createOrder } from '../store/slices/orderSlice.js';
 import { validateCouponSocket, onCouponValidation, onCouponUsed } from '../utils/socket.js';
 
-/**
- * Checkout Component
- * Demonstrates: useState, useEffect, Socket.IO, form handling
- */
+// Checkout Component
 const Checkout = () => {
   const dispatch = useDispatch();
   const { activeCoupons } = useSelector((state) => state.coupons);
@@ -35,7 +23,7 @@ const Checkout = () => {
     dispatch(fetchActiveCoupons());
   }, [dispatch]);
 
-  // Setup Socket.IO listeners (UNIT III - useEffect, Socket.IO)
+  // Setup Socket.IO listeners
   useEffect(() => {
     const handleValidation = (result) => {
       setIsValidating(false);
@@ -52,10 +40,7 @@ const Checkout = () => {
     };
   }, [couponCode]);
 
-  /**
-   * Handle coupon validation
-   * Demonstrates: Async operations, Socket.IO usage
-   */
+  // Handle coupon validation
   const handleValidateCoupon = async () => {
     if (!couponCode || !orderAmount) {
       alert('Please enter both coupon code and order amount');
@@ -98,10 +83,7 @@ const Checkout = () => {
     }
   };
 
-  /**
-   * Handle apply coupon
-   * Demonstrates: API call, async operations
-   */
+  // Handle apply coupon
   const handleApplyCoupon = async () => {
     if (!validationResult?.valid || !orderAmount) {
       return;

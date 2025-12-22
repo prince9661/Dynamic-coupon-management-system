@@ -1,12 +1,4 @@
-/**
- * ============================================
- * UNIT V - HTTP & Data Fetching: Orders Page
- * ============================================
- * 
- * Orders Page:
- * - Displays user orders
- * - Demonstrates: Data fetching, pagination
- */
+// Orders Page
 
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -76,10 +68,10 @@ const Orders = () => {
                     <td className="px-4 py-3 whitespace-nowrap">
                       <span
                         className={`text-xs font-medium px-2 py-0.5 rounded-full border ${order.status === 'completed'
-                            ? 'bg-[#238636]/10 text-[#3fb950] border-[#238636]/20'
-                            : order.status === 'pending'
-                              ? 'bg-[#9e6a03]/10 text-[#d29922] border-[#9e6a03]/20'
-                              : 'bg-[#da3633]/10 text-[#f85149] border-[#f85149]/40'
+                          ? 'bg-[#238636]/10 text-[#3fb950] border-[#238636]/20'
+                          : order.status === 'pending'
+                            ? 'bg-[#9e6a03]/10 text-[#d29922] border-[#9e6a03]/20'
+                            : 'bg-[#da3633]/10 text-[#f85149] border-[#f85149]/40'
                           }`}
                       >
                         {order.status}

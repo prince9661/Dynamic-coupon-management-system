@@ -1,20 +1,11 @@
-/**
- * ============================================
- * UNIT VI - Redux: Auth Slice
- * ============================================
- * 
- * Authentication Redux Slice:
- * - Manages authentication state
- * - Handles login, logout, registration
- * - Demonstrates: createSlice, reducers, actions
- */
+// Auth Slice for managing authentication state
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
-// Async thunk for login (UNIT VI - Async actions)
+// Login action
 export const login = createAsyncThunk(
   'auth/login',
   async ({ email, password }, { rejectWithValue }) => {
@@ -85,7 +76,7 @@ const initialState = {
   error: null,
 };
 
-// Auth slice (UNIT VI - Redux slice)
+// Auth slice
 const authSlice = createSlice({
   name: 'auth',
   initialState,

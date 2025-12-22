@@ -1,12 +1,4 @@
-/**
- * ============================================
- * UNIT V - HTTP & Data Fetching: Dashboard
- * ============================================
- * 
- * Dashboard Page:
- * - Main dashboard with statistics
- * - Demonstrates: useEffect, data fetching, conditional rendering
- */
+// Dashboard containing statistics
 
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,10 +8,7 @@ import { fetchCampaigns } from '../store/slices/campaignSlice.js';
 import { fetchOrders } from '../store/slices/orderSlice.js';
 import { onCouponUsed } from '../utils/socket.js';
 
-/**
- * Dashboard Component
- * Demonstrates: useEffect, useSelector, data fetching
- */
+// Dashboard Component
 const Dashboard = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
@@ -27,14 +16,14 @@ const Dashboard = () => {
   const { campaigns, pagination: campaignPagination } = useSelector((state) => state.campaigns);
   const { orders, pagination: orderPagination } = useSelector((state) => state.orders);
 
-  // Fetch data on mount (UNIT III - useEffect, UNIT V - Data fetching)
+  // Fetch data on mount
   useEffect(() => {
     dispatch(fetchCoupons({ page: 1, limit: 5 }));
     dispatch(fetchCampaigns({ page: 1, limit: 5 }));
     dispatch(fetchOrders({ page: 1, limit: 5 }));
   }, [dispatch]);
 
-  // Listen to real-time coupon usage updates (UNIT III - useEffect, Socket.IO)
+  // Listen to real-time coupon usage updates
   useEffect(() => {
     const handleCouponUsed = (data) => {
       console.log('Real-time update:', data);
@@ -116,8 +105,8 @@ const Dashboard = () => {
                 </div>
                 <span
                   className={`text-xs font-medium px-2 py-0.5 rounded-full border ${coupon.isActive
-                      ? 'bg-[#238636]/10 text-[#3fb950] border-[#238636]/20'
-                      : 'bg-[#30363d]/50 text-[#8b949e] border-[#30363d]'
+                    ? 'bg-[#238636]/10 text-[#3fb950] border-[#238636]/20'
+                    : 'bg-[#30363d]/50 text-[#8b949e] border-[#30363d]'
                     }`}
                 >
                   {coupon.isActive ? 'Active' : 'Inactive'}
@@ -154,8 +143,8 @@ const Dashboard = () => {
                 </div>
                 <span
                   className={`text-xs font-medium px-2 py-0.5 rounded-full border ${campaign.isActive
-                      ? 'bg-[#1f6feb]/10 text-[#58a6ff] border-[#1f6feb]/20'
-                      : 'bg-[#30363d]/50 text-[#8b949e] border-[#30363d]'
+                    ? 'bg-[#1f6feb]/10 text-[#58a6ff] border-[#1f6feb]/20'
+                    : 'bg-[#30363d]/50 text-[#8b949e] border-[#30363d]'
                     }`}
                 >
                   {campaign.isActive ? 'Active' : 'Inactive'}

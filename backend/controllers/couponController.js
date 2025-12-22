@@ -2,9 +2,7 @@
 import Coupon from '../models/Coupon.js';
 import Campaign from '../models/Campaign.js';
 
-/**
- * Get all coupons with filtering
- */
+// Get all coupons with filtering
 export const getCoupons = async (req, res) => {
     try {
         const {
@@ -47,9 +45,7 @@ export const getCoupons = async (req, res) => {
     }
 };
 
-/**
- * Get all active and valid coupons
- */
+// Get all active and valid coupons
 export const getActiveCoupons = async (req, res) => {
     try {
         const coupons = await Coupon.findActive()
@@ -64,9 +60,7 @@ export const getActiveCoupons = async (req, res) => {
     }
 };
 
-/**
- * Get single coupon by ID
- */
+// Get single coupon by ID
 export const getCouponById = async (req, res) => {
     try {
         const coupon = await Coupon.findById(req.params.id)
@@ -84,9 +78,7 @@ export const getCouponById = async (req, res) => {
     }
 };
 
-/**
- * Get coupon by code
- */
+// Get coupon by code
 export const getCouponByCode = async (req, res) => {
     try {
         const coupon = await Coupon.findByCode(req.params.code)
@@ -104,9 +96,7 @@ export const getCouponByCode = async (req, res) => {
     }
 };
 
-/**
- * Create new coupon
- */
+// Create new coupon
 export const createCoupon = async (req, res) => {
     try {
         // Verify campaign exists
@@ -137,9 +127,7 @@ export const createCoupon = async (req, res) => {
     }
 };
 
-/**
- * Update coupon
- */
+// Update coupon
 export const updateCoupon = async (req, res) => {
     try {
         const updateData = { ...req.body };
@@ -167,9 +155,7 @@ export const updateCoupon = async (req, res) => {
     }
 };
 
-/**
- * Activate coupon
- */
+// Activate coupon
 export const activateCoupon = async (req, res) => {
     try {
         const coupon = await Coupon.findByIdAndUpdate(
@@ -189,9 +175,7 @@ export const activateCoupon = async (req, res) => {
     }
 };
 
-/**
- * Deactivate coupon
- */
+// Deactivate coupon
 export const deactivateCoupon = async (req, res) => {
     try {
         const coupon = await Coupon.findByIdAndUpdate(
@@ -211,9 +195,7 @@ export const deactivateCoupon = async (req, res) => {
     }
 };
 
-/**
- * Delete coupon
- */
+// Delete coupon
 export const deleteCoupon = async (req, res) => {
     try {
         const coupon = await Coupon.findByIdAndDelete(req.params.id);
@@ -229,9 +211,7 @@ export const deleteCoupon = async (req, res) => {
     }
 };
 
-/**
- * Validate coupon without using it
- */
+// Validate coupon without using it
 export const validateCoupon = async (req, res) => {
     try {
         const { couponCode, amount } = req.body;

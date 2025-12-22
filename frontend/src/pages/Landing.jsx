@@ -7,25 +7,18 @@ export default function Landing() {
     return (
         <div className="min-h-screen bg-[#0d1117] text-[#c9d1d9] relative overflow-hidden font-sans selection:bg-[#58a6ff] selection:text-[#0d1117]">
 
-            {/* Background Layers - GitHub Globe/Space Effect */}
-            <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-                {/* Top Right Violet Glow */}
-                <div className="absolute top-[-10%] right-[-5%] w-[70vw] h-[70vw] bg-[#bc8cff] opacity-[0.15] blur-[120px] rounded-full mix-blend-screen"></div>
-                {/* Bottom Left Blue Glow */}
-                <div className="absolute bottom-[-10%] left-[-10%] w-[60vw] h-[60vw] bg-[#58a6ff] opacity-[0.12] blur-[100px] rounded-full mix-blend-screen"></div>
-                {/* Lines Pattern (Simulated Globe Grid) */}
-                <div className="absolute inset-0 opacity-[0.1]" style={{
-                    backgroundImage: 'linear-gradient(#30363d 1px, transparent 1px), linear-gradient(90deg, #30363d 1px, transparent 1px)',
-                    backgroundSize: '80px 80px',
-                    maskImage: 'radial-gradient(circle at center, black 40%, transparent 100%)'
-                }}></div>
-            </div>
+            {/* Dynamic Background */}
+            <div className="absolute inset-0 opacity-[0.1]" style={{
+                backgroundImage: 'linear-gradient(#30363d 1px, transparent 1px), linear-gradient(90deg, #30363d 1px, transparent 1px)',
+                backgroundSize: '80px 80px',
+                maskImage: 'radial-gradient(circle at center, black 40%, transparent 100%)'
+            }}></div>
 
-            {/* ================= NAVBAR ================= */}
+            {/* Navbar */}
             <header className="fixed top-0 w-full z-50 bg-[#0d1117]/80 backdrop-blur-md border-b border-white/10">
                 <div className="max-w-[1280px] mx-auto px-4 h-[62px] flex items-center justify-between">
                     <div className="flex items-center gap-8">
-                        {/* Logo - Animated Text */}
+                        {/* Logo */}
                         <Link to="/" className="group flex items-center gap-2 transition-opacity hover:opacity-90">
                             <span className="text-[24px] font-extrabold tracking-tight bg-gradient-to-r from-white via-[#c9d1d9] to-white bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient-x drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">
                                 COUPON PULSE
@@ -61,7 +54,7 @@ export default function Landing() {
                 </div>
             </header>
 
-            {/* ================= HERO SECTION (Left Aligned) ================= */}
+            {/* Hero Section */}
             <section className="relative z-10 pt-48 pb-32 px-4">
                 <div className="max-w-[1280px] mx-auto grid md:grid-cols-12 gap-12">
                     {/* Left Column - Content */}
@@ -105,7 +98,7 @@ export default function Landing() {
 
                     {/* Right Column - Visual/Code */}
                     <div className="md:col-span-5 relative">
-                        {/* Simulating the GitHub Code Window */}
+                        {/* Code Window */}
                         <div className="bg-[#161b22] border border-[#30363d] rounded-lg shadow-2xl p-4 transform rotate-[-2deg] hover:rotate-0 transition-transform duration-500 origin-bottom-right">
                             {/* Window Controls */}
                             <div className="flex items-center gap-2 mb-4">
@@ -131,7 +124,7 @@ export default function Landing() {
                 </div>
             </section>
 
-            {/* ================= FEATURES BENTO GRID ================= */}
+            {/* Features Grid */}
             <section id="features" className="py-24 relative z-10 px-4">
                 <div className="max-w-[1280px] mx-auto">
                     <div className="mb-12">
@@ -187,7 +180,7 @@ export default function Landing() {
                 </div>
             </section>
 
-            {/* ================= CREATORS SECTION ================= */}
+            {/* Creators Section */}
             <section id="creators" className="py-24 relative z-10 px-4 border-t border-[#30363d] bg-[#161b22]/30">
                 <div className="max-w-[1280px] mx-auto">
                     <div className="mb-16 text-center">
@@ -297,7 +290,7 @@ export default function Landing() {
             </section>
 
 
-            {/* ================= FOOTER ================= */}
+            {/* Footer */}
             <footer className="bg-[#0d1117] py-12 px-4 border-t border-[#30363d]">
                 <div className="max-w-[1280px] mx-auto grid md:grid-cols-4 gap-8 mb-8">
                     <div>
@@ -307,6 +300,6 @@ export default function Landing() {
                     </div>
                 </div>
             </footer>
-        </div>
+        </div >
     );
 }
