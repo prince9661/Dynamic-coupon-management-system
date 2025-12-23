@@ -236,8 +236,12 @@ export default function Landing() {
 
                                 {/* Inner Image Box */}
                                 <div className="bg-[#0d1117] rounded-[16px] aspect-square mb-6 border-4 border-[#0d1117] shadow-inner relative overflow-hidden flex items-center justify-center">
-                                    {/* Pixelated Avatar Placeholder */}
-                                    <span className="text-[80px] filter drop-shadow-md grayscale group-hover:grayscale-0 transition-all duration-300 transform group-hover:scale-110">🎨</span>
+                                    {/* Real Image */}
+                                    <img
+                                        src="/Prince.jpeg"
+                                        alt="Prince Kumar"
+                                        className="w-full h-full object-cover object-center filter grayscale group-hover:grayscale-0 transition-all duration-300 transform group-hover:scale-105 image-pixelated"
+                                    />
                                     {/* Scanline Effect */}
                                     <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-10 bg-[length:100%_4px,6px_100%] pointer-events-none opacity-40"></div>
                                 </div>
@@ -267,8 +271,12 @@ export default function Landing() {
 
                                 {/* Inner Image Box */}
                                 <div className="bg-[#0d1117] rounded-[16px] aspect-square mb-6 border-4 border-[#0d1117] shadow-inner relative overflow-hidden flex items-center justify-center">
-                                    {/* Pixelated Avatar Placeholder */}
-                                    <span className="text-[80px] filter drop-shadow-md grayscale group-hover:grayscale-0 transition-all duration-300 transform group-hover:scale-110">🚀</span>
+                                    {/* Real Image */}
+                                    <img
+                                        src="/Mayank.jpeg"
+                                        alt="Mayank Yadav"
+                                        className="w-full h-full object-cover object-top filter grayscale group-hover:grayscale-0 transition-all duration-300 transform group-hover:scale-105 image-pixelated"
+                                    />
                                     {/* Scanline Effect */}
                                     <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-10 bg-[length:100%_4px,6px_100%] pointer-events-none opacity-40"></div>
                                 </div>
@@ -287,11 +295,11 @@ export default function Landing() {
                         </div>
                     </div>
                 </div>
-            </section>
+            </section >
 
 
             {/* Footer */}
-            <footer className="bg-[#0d1117] py-12 px-4 border-t border-[#30363d]">
+            < footer className="bg-[#0d1117] py-12 px-4 border-t border-[#30363d]" >
                 <div className="max-w-[1280px] mx-auto grid md:grid-cols-4 gap-8 mb-8">
                     <div>
                         <div className="flex items-center gap-2 mb-4 text-[#8b949e]">
@@ -299,7 +307,7 @@ export default function Landing() {
                         </div>
                     </div>
                 </div>
-            </footer>
+            </footer >
         </div >
     );
 }
