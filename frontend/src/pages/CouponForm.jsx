@@ -1,22 +1,26 @@
-// Coupon Form to create/edit coupons
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { createCoupon, updateCoupon, fetchCouponById, fetchActiveCoupons } from '../store/slices/couponSlice.js';
+import { createCoupon, updateCoupon, fetchCouponById } from '../store/slices/couponSlice.js';
 import { fetchCampaigns } from '../store/slices/campaignSlice.js';
 
-// CouponForm Component
+/**
+ * CouponForm Component
+ * 
+ * Handles both Creation and Editing of coupons.
+ * Uses 'id' param to determine mode (Create vs Edit).
+ * Includes client-side validation logic.
+ */
 const CouponForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { id } = useParams(); // If ID exists, we are in Edit mode
   const isEditMode = !!id;
 
   const { currentCoupon } = useSelector((state) => state.coupons);
   const { campaigns } = useSelector((state) => state.campaigns);
 
-  // Form state
+  // Form State
   const [formData, setFormData] = useState({
     code: '',
     description: '',
@@ -33,15 +37,16 @@ const CouponForm = () => {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Fetch coupon if editing
+  // Initialize Data
   useEffect(() => {
     if (isEditMode) {
       dispatch(fetchCouponById(id));
     }
+    // Fetch campaigns for the dropdown
     dispatch(fetchCampaigns());
   }, [dispatch, id, isEditMode]);
 
-  // Populate form when coupon is loaded
+  // Populate form when editing
   useEffect(() => {
     if (isEditMode && currentCoupon) {
       setFormData({
@@ -52,14 +57,15 @@ const CouponForm = () => {
         minPurchaseAmount: currentCoupon.minPurchaseAmount || '',
         maxDiscountAmount: currentCoupon.maxDiscountAmount || '',
         maxUsage: currentCoupon.maxUsage || '',
+        // Format dates for input[type="date"]
         expiryDate: currentCoupon.expiryDate ? new Date(currentCoupon.expiryDate).toISOString().split('T')[0] : '',
         startDate: currentCoupon.startDate ? new Date(currentCoupon.startDate).toISOString().split('T')[0] : '',
+        // Handle populated campaign object or direct ID
         campaignId: currentCoupon.campaignId?._id || currentCoupon.campaignId || '',
       });
     }
   }, [currentCoupon, isEditMode]);
 
-  // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -75,7 +81,10 @@ const CouponForm = () => {
     }
   };
 
-  // Validate form
+  /**
+   * Client-side validation logic.
+   * Ensures data integrity before sending to API.
+   */
   const validate = () => {
     const newErrors = {};
 
@@ -105,7 +114,6 @@ const CouponForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -116,6 +124,7 @@ const CouponForm = () => {
     setIsSubmitting(true);
 
     try {
+      // Prepare payload (convert strings to numbers)
       const submitData = {
         ...formData,
         discountValue: parseFloat(formData.discountValue),
@@ -124,10 +133,11 @@ const CouponForm = () => {
         maxUsage: formData.maxUsage ? parseInt(formData.maxUsage) : null,
       };
 
+      // Cleanup optional fields
       if (!submitData.startDate) delete submitData.startDate;
       if (!submitData.maxUsage) submitData.maxUsage = null;
 
-      // Clean up empty strings
+      // Remove empty strings keys
       Object.keys(submitData).forEach(key => {
         if (submitData[key] === '') {
           delete submitData[key];
@@ -191,8 +201,8 @@ const CouponForm = () => {
             />
           </div>
 
+          {/* Discount Configuration */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Discount Type */}
             <div>
               <label htmlFor="discountType" className="block text-sm font-semibold text-white mb-2">
                 Discount Type <span className="text-[#ff7b72]">*</span>
@@ -209,7 +219,6 @@ const CouponForm = () => {
               </select>
             </div>
 
-            {/* Discount Value */}
             <div>
               <label htmlFor="discountValue" className="block text-sm font-semibold text-white mb-2">
                 Discount Value <span className="text-[#ff7b72]">*</span>
@@ -229,8 +238,8 @@ const CouponForm = () => {
             </div>
           </div>
 
+          {/* Value Constraints */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Min Purchase Amount */}
             <div>
               <label htmlFor="minPurchaseAmount" className="block text-sm font-semibold text-white mb-2">
                 Minimum Purchase Amount
@@ -247,7 +256,6 @@ const CouponForm = () => {
               />
             </div>
 
-            {/* Max Discount Amount */}
             <div>
               <label htmlFor="maxDiscountAmount" className="block text-sm font-semibold text-white mb-2">
                 Maximum Discount Amount
@@ -265,8 +273,8 @@ const CouponForm = () => {
             </div>
           </div>
 
+          {/* Usage and Campaign */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Max Usage */}
             <div>
               <label htmlFor="maxUsage" className="block text-sm font-semibold text-white mb-2">
                 Maximum Usage <span className="text-[#8b949e] font-normal">(optional)</span>
@@ -283,7 +291,6 @@ const CouponForm = () => {
               />
             </div>
 
-            {/* Campaign */}
             <div>
               <label htmlFor="campaignId" className="block text-sm font-semibold text-white mb-2">
                 Campaign <span className="text-[#ff7b72]">*</span>
@@ -307,8 +314,8 @@ const CouponForm = () => {
             </div>
           </div>
 
+          {/* Dates */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Start Date */}
             <div>
               <label htmlFor="startDate" className="block text-sm font-semibold text-white mb-2">
                 Start Date
@@ -323,7 +330,6 @@ const CouponForm = () => {
               />
             </div>
 
-            {/* Expiry Date */}
             <div>
               <label htmlFor="expiryDate" className="block text-sm font-semibold text-white mb-2">
                 Expiry Date <span className="text-[#ff7b72]">*</span>
@@ -341,7 +347,7 @@ const CouponForm = () => {
             </div>
           </div>
 
-          {/* Submit Button */}
+          {/* Action Buttons */}
           <div className="flex space-x-4 pt-6 border-t border-[#30363d]">
             <button
               type="submit"
@@ -365,5 +371,3 @@ const CouponForm = () => {
 };
 
 export default CouponForm;
-
-

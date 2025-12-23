@@ -1,15 +1,20 @@
-// Orders Page
-
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchOrders } from '../store/slices/orderSlice.js';
 
+/**
+ * Orders (My Orders) Component
+ * 
+ * Displays list of orders for the currently logged-in user.
+ * Shows details like order ID, applied coupon, and status.
+ */
 const Orders = () => {
   const dispatch = useDispatch();
   const { orders, pagination, isLoading } = useSelector((state) => state.orders);
 
   const [page, setPage] = useState(1);
 
+  // Fetch orders on load or page change
   useEffect(() => {
     dispatch(fetchOrders({ page }));
   }, [dispatch, page]);
@@ -66,13 +71,12 @@ const Orders = () => {
                       ${parseFloat(order.finalAmount).toFixed(2)}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">
-                      <span
-                        className={`text-xs font-medium px-2 py-0.5 rounded-full border ${order.status === 'completed'
-                          ? 'bg-[#238636]/10 text-[#3fb950] border-[#238636]/20'
-                          : order.status === 'pending'
-                            ? 'bg-[#9e6a03]/10 text-[#d29922] border-[#9e6a03]/20'
-                            : 'bg-[#da3633]/10 text-[#f85149] border-[#f85149]/40'
-                          }`}
+                      <span className={`text-xs font-medium px-2 py-0.5 rounded-full border ${order.status === 'completed'
+                        ? 'bg-[#238636]/10 text-[#3fb950] border-[#238636]/20'
+                        : order.status === 'pending'
+                          ? 'bg-[#9e6a03]/10 text-[#d29922] border-[#9e6a03]/20'
+                          : 'bg-[#da3633]/10 text-[#f85149] border-[#f85149]/40'
+                        }`}
                       >
                         {order.status}
                       </span>
@@ -94,6 +98,7 @@ const Orders = () => {
         </div>
       )}
 
+      {/* Pagination */}
       {pagination.pages > 1 && (
         <div className="flex justify-center items-center space-x-4 pt-6 border-t border-[#30363d]">
           <button
@@ -120,5 +125,3 @@ const Orders = () => {
 };
 
 export default Orders;
-
-

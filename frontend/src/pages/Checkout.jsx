@@ -1,29 +1,39 @@
-// Checkout Page
-
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { validateCoupon, fetchActiveCoupons } from '../store/slices/couponSlice.js';
 import { applyCoupon, createOrder } from '../store/slices/orderSlice.js';
-import { validateCouponSocket, onCouponValidation, onCouponUsed } from '../utils/socket.js';
+import { onCouponValidation } from '../utils/socket.js';
 
-// Checkout Component
+/**
+ * Checkout Component
+ * 
+ * Simulates a checkout process.
+ * Allows users to:
+ * 1. Enter order amount
+ * 2. Validate a coupon code against that amount
+ * 3. See discounted price
+ * 4. Place order with applied coupon
+ */
 const Checkout = () => {
   const dispatch = useDispatch();
   const { activeCoupons } = useSelector((state) => state.coupons);
   const { user } = useSelector((state) => state.auth);
 
+  // checkout form state
   const [orderAmount, setOrderAmount] = useState('');
   const [couponCode, setCouponCode] = useState('');
-  const [validationResult, setValidationResult] = useState(null);
+
+  // Validation State
+  const [validationResult, setValidationResult] = useState(null); // stores valid/invalid response
   const [isValidating, setIsValidating] = useState(false);
   const [appliedCoupon, setAppliedCoupon] = useState(null);
 
-  // Fetch active coupons on mount
+  // Fetch available coupons for user convenience
   useEffect(() => {
     dispatch(fetchActiveCoupons());
   }, [dispatch]);
 
-  // Setup Socket.IO listeners
+  // Listen for real-time validation results (optional feature placeholder)
   useEffect(() => {
     const handleValidation = (result) => {
       setIsValidating(false);
@@ -36,11 +46,14 @@ const Checkout = () => {
     onCouponValidation(handleValidation);
 
     return () => {
-      // Cleanup
+      // socket.off cleanup if needed
     };
   }, [couponCode]);
 
-  // Handle coupon validation
+  /**
+   * Validate coupon handler.
+   * Checks if code is valid for the entered amount.
+   */
   const handleValidateCoupon = async () => {
     if (!couponCode || !orderAmount) {
       alert('Please enter both coupon code and order amount');
@@ -50,16 +63,13 @@ const Checkout = () => {
     setIsValidating(true);
     setValidationResult(null);
 
-    // Socket.IO validation removed to prevent race condition with API
-    // validateCouponSocket(couponCode, parseFloat(orderAmount));
-
-    // Also validate via API as fallback
     try {
       const result = await dispatch(validateCoupon({
         couponCode,
         amount: parseFloat(orderAmount)
       }));
 
+      // Check promise resolution status
       if (validateCoupon.fulfilled.match(result)) {
         setValidationResult({
           valid: true,
@@ -70,7 +80,7 @@ const Checkout = () => {
       } else {
         setValidationResult({
           valid: false,
-          error: result.payload
+          error: result.payload // Error message from backend
         });
       }
     } catch (error) {
@@ -83,14 +93,17 @@ const Checkout = () => {
     }
   };
 
-  // Handle apply coupon
+  /**
+   * Apply Coupon and Place Order handler.
+   * Creates the order first, then applies the coupon to it.
+   */
   const handleApplyCoupon = async () => {
     if (!validationResult?.valid || !orderAmount) {
       return;
     }
 
     try {
-      // Create order first
+      // Step 1: Create pending order
       const orderResult = await dispatch(createOrder({
         totalAmount: parseFloat(orderAmount)
       }));
@@ -98,7 +111,7 @@ const Checkout = () => {
       if (createOrder.fulfilled.match(orderResult)) {
         const orderId = orderResult.payload.id;
 
-        // Apply coupon
+        // Step 2: Apply coupon to order
         const applyResult = await dispatch(applyCoupon({
           couponCode,
           amount: parseFloat(orderAmount),
@@ -106,7 +119,7 @@ const Checkout = () => {
         }));
 
         if (applyCoupon.fulfilled.match(applyResult)) {
-          alert('Coupon applied successfully!');
+          alert('Coupon applied successfully! Order placed.');
           // Reset form
           setOrderAmount('');
           setCouponCode('');
@@ -169,7 +182,7 @@ const Checkout = () => {
             </div>
           </div>
 
-          {/* Validation Result */}
+          {/* Validation Status / Result Box */}
           {validationResult && (
             <div
               className={`p-4 rounded-[6px] border ${validationResult.valid
@@ -178,6 +191,7 @@ const Checkout = () => {
                 }`}
             >
               {validationResult.valid ? (
+                // Valid Layout
                 <div className="space-y-4">
                   <div className="flex items-center text-[#3fb950] font-semibold">
                     <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -201,6 +215,7 @@ const Checkout = () => {
                   </button>
                 </div>
               ) : (
+                // Invalid Layout
                 <div className="flex items-center text-[#ff7b72]">
                   <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
@@ -211,7 +226,7 @@ const Checkout = () => {
             </div>
           )}
 
-          {/* Available Coupons */}
+          {/* Available Coupons List (Suggestions) */}
           <div className="space-y-4 pt-6 border-t border-[#30363d]">
             <h3 className="text-xl font-bold text-white tracking-tight">Available Coupons</h3>
             <div className="space-y-3">
@@ -227,13 +242,10 @@ const Checkout = () => {
                       </span>
                       <span className="text-[#8b949e] text-sm group-hover:text-[#c9d1d9] transition-colors">{coupon.description}</span>
                     </div>
+                    {/* One-click use button */}
                     <button
                       onClick={() => {
                         setCouponCode(coupon.code);
-                        if (orderAmount) {
-                          // We can't immediately validate here because React state updates are async
-                          // But setting code is enough for user to just click validate
-                        }
                       }}
                       className="text-[#58a6ff] text-sm font-medium hover:underline"
                     >
@@ -253,5 +265,3 @@ const Checkout = () => {
 };
 
 export default Checkout;
-
-

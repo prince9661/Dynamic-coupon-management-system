@@ -3,10 +3,8 @@
 @tailwind utilities;
 
 :root {
-  /* Typography - GitHub Strict Stack */
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica', 'Arial', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
 
-  /* GitHub Dark Theme Colors */
   --bg-primary: #0d1117;
   --bg-secondary: #161b22;
   --border-color: #30363d;
@@ -23,7 +21,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Animated Pixel Art Forest */
 .pixel-background-container {
   position: fixed;
   top: 0;
@@ -33,18 +30,14 @@ body {
   z-index: 0;
   overflow: hidden;
   background-color: #0d1117;
-  /* Fallback */
 }
 
-/* Semi-transparent overlay for better text contrast */
 .pixel-background-container::after {
   content: '';
   position: absolute;
   inset: 0;
   background-color: rgba(0, 0, 0, 0.4);
-  /* 40% black overlay */
   z-index: 1;
-  /* Above image, below content */
   pointer-events: none;
 }
 
@@ -54,13 +47,11 @@ body {
   left: 0;
   height: 100%;
   width: 300%;
-  /* Triple width for seamless loop */
   background-image: url('/pixel-forest.png');
   background-repeat: repeat-x;
   background-size: auto 100%;
   animation: scroll-bg 120s linear infinite;
   image-rendering: pixelated;
-  /* Crisp pixels */
   z-index: 0;
 }
 
@@ -74,7 +65,6 @@ body {
   }
 }
 
-/* Float Animation */
 @keyframes float {
   0% {
     transform: translateY(0px);
@@ -93,7 +83,6 @@ body {
   animation: float 6s ease-in-out infinite;
 }
 
-/* Button Micro-interactions */
 .btn-primary {
   background-color: var(--btn-primary);
   color: white;
@@ -117,7 +106,6 @@ body {
   transform: translateY(-2px);
 }
 
-/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }

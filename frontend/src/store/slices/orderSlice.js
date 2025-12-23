@@ -1,128 +1,113 @@
-/**
- * ============================================
- * UNIT VI - Redux: Order Slice
- * ============================================
- * 
- * Order Redux Slice:
- * - Manages order state
- * - Handles order operations
- */
-
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL = 'http://localhost:5000/api/orders';
 
+const config = {
+  headers: { 'Content-Type': 'application/json' },
+  withCredentials: true,
+};
+
+/**
+ * Fetch orders for the current user.
+ */
 export const fetchOrders = createAsyncThunk(
-  'orders/fetchOrders',
-  async (params = {}, { rejectWithValue }) => {
+  'orders/fetchAll',
+  async ({ page = 1 } = {}, thunkAPI) => {
     try {
-      const response = await axios.get(`${API_URL}/orders`, { params, withCredentials: true });
+      const response = await axios.get(`${API_URL}?page=${page}`, config);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.error || 'Failed to fetch orders');
+      return thunkAPI.rejectWithValue(error.response?.data?.message || 'Failed to fetch orders');
     }
   }
 );
 
+/**
+ * Create a new pending order.
+ */
 export const createOrder = createAsyncThunk(
-  'orders/createOrder',
-  async (orderData, { rejectWithValue }) => {
+  'orders/create',
+  async (orderData, thunkAPI) => {
     try {
-      const response = await axios.post(`${API_URL}/orders`, orderData, { withCredentials: true });
-      return response.data.order;
+      const response = await axios.post(API_URL, orderData, config);
+      return { id: response.data._id, ...response.data };
     } catch (error) {
-      return rejectWithValue(error.response?.data?.error || 'Failed to create order');
+      return thunkAPI.rejectWithValue(error.response?.data?.message);
     }
   }
 );
 
+/**
+ * Apply a coupon to a pending order and compute final price.
+ */
 export const applyCoupon = createAsyncThunk(
   'orders/applyCoupon',
-  async ({ couponCode, amount, orderId }, { rejectWithValue }) => {
+  async ({ orderId, couponCode }, thunkAPI) => {
     try {
       const response = await axios.post(
-        `${API_URL}/usage/apply`,
-        { couponCode, amount, orderId },
-        { withCredentials: true }
+        `${API_URL}/apply-coupon`,
+        { orderId, couponCode },
+        config
       );
-      return response.data.usage;
+      return response.data; // Updated order details
     } catch (error) {
-      return rejectWithValue(error.response?.data?.error || 'Failed to apply coupon');
+      return thunkAPI.rejectWithValue(error.response?.data?.message || 'Failed to apply coupon');
     }
   }
 );
 
-// Async thunk to update order status
+/**
+ * Update status of an order (Admin).
+ */
 export const updateOrderStatus = createAsyncThunk(
   'orders/updateStatus',
-  async ({ orderId, status }, { rejectWithValue }) => {
+  async ({ orderId, status }, thunkAPI) => {
     try {
-      const response = await axios.put(`${API_URL}/orders/${orderId}`, { status }, {
-        withCredentials: true
-      });
-      return response.data;
+      const response = await axios.put(`${API_URL}/${orderId}/status`, { status }, config);
+      return response.data; // Updated order
     } catch (error) {
-      return rejectWithValue(error.response?.data?.error || 'Failed to update order status');
+      return thunkAPI.rejectWithValue(error.response?.data?.message);
     }
   }
 );
-
-const initialState = {
-  orders: [],
-  currentOrder: null,
-  pagination: {
-    page: 1,
-    limit: 10,
-    total: 0,
-    pages: 0,
-  },
-  isLoading: false,
-  error: null,
-};
 
 const orderSlice = createSlice({
   name: 'orders',
-  initialState,
-  reducers: {
-    clearError: (state) => {
-      state.error = null;
-    },
-    setCurrentOrder: (state, action) => {
-      state.currentOrder = action.payload;
-    },
+  initialState: {
+    orders: [],
+    currentOrder: null,
+    pagination: { page: 1, pages: 1, total: 0 },
+    isLoading: false,
+    error: null,
   },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchOrders.pending, (state) => {
         state.isLoading = true;
-        state.error = null;
       })
       .addCase(fetchOrders.fulfilled, (state, action) => {
         state.isLoading = false;
         state.orders = action.payload.orders;
-        state.pagination = action.payload.pagination;
+        state.pagination = {
+          page: action.payload.page,
+          pages: action.payload.pages,
+          total: action.payload.total
+        };
       })
       .addCase(fetchOrders.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       })
-      .addCase(createOrder.fulfilled, (state, action) => {
-        state.currentOrder = action.payload;
-        state.orders.unshift(action.payload);
-      })
       .addCase(updateOrderStatus.fulfilled, (state, action) => {
-        state.isLoading = false;
-        // Update the order in the list
-        const index = state.orders.findIndex(o => o._id === action.payload.order.id);
+        // Update the order in the list with the new status
+        const index = state.orders.findIndex(o => o._id === action.payload._id);
         if (index !== -1) {
-          state.orders[index] = { ...state.orders[index], status: action.payload.order.status };
+          state.orders[index] = action.payload;
         }
       });
   },
 });
 
-export const { clearError, setCurrentOrder } = orderSlice.actions;
 export default orderSlice.reducer;
-
-

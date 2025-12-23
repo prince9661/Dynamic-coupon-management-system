@@ -1,262 +1,225 @@
-
 import Coupon from '../models/Coupon.js';
-import Campaign from '../models/Campaign.js';
+import UsageTracking from '../models/UsageTracking.js';
+import { validationResult } from 'express-validator';
+import { io } from '../server.js';
 
-// Get all coupons with filtering
-export const getCoupons = async (req, res) => {
-    try {
-        const {
-            campaignId,
-            isActive,
-            code,
-            page = 1,
-            limit = 10
-        } = req.query;
-
-        const query = {};
-
-        if (campaignId) query.campaignId = campaignId;
-        if (isActive !== undefined && isActive !== '') query.isActive = isActive === 'true';
-        if (code) query.code = code.toUpperCase();
-
-        const skip = (parseInt(page) - 1) * parseInt(limit);
-
-        const coupons = await Coupon.find(query)
-            .populate('campaignId', 'name description')
-            .sort({ createdAt: -1 })
-            .skip(skip)
-            .limit(parseInt(limit))
-            .lean();
-
-        const total = await Coupon.countDocuments(query);
-
-        res.json({
-            coupons,
-            pagination: {
-                page: parseInt(page),
-                limit: parseInt(limit),
-                total,
-                pages: Math.ceil(total / parseInt(limit))
-            }
-        });
-    } catch (error) {
-        console.error('Get coupons error:', error);
-        res.status(500).json({ error: 'Failed to fetch coupons', message: error.message });
-    }
-};
-
-// Get all active and valid coupons
-export const getActiveCoupons = async (req, res) => {
-    try {
-        const coupons = await Coupon.findActive()
-            .populate('campaignId', 'name')
-            .select('code description discountType discountValue minPurchaseAmount expiryDate')
-            .lean();
-
-        res.json({ coupons });
-    } catch (error) {
-        console.error('Get active coupons error:', error);
-        res.status(500).json({ error: 'Failed to fetch active coupons', message: error.message });
-    }
-};
-
-// Get single coupon by ID
-export const getCouponById = async (req, res) => {
-    try {
-        const coupon = await Coupon.findById(req.params.id)
-            .populate('campaignId')
-            .lean();
-
-        if (!coupon) {
-            return res.status(404).json({ error: 'Coupon not found' });
-        }
-
-        res.json({ coupon });
-    } catch (error) {
-        console.error('Get coupon error:', error);
-        res.status(500).json({ error: 'Failed to fetch coupon', message: error.message });
-    }
-};
-
-// Get coupon by code
-export const getCouponByCode = async (req, res) => {
-    try {
-        const coupon = await Coupon.findByCode(req.params.code)
-            .populate('campaignId')
-            .lean();
-
-        if (!coupon) {
-            return res.status(404).json({ error: 'Coupon not found' });
-        }
-
-        res.json({ coupon });
-    } catch (error) {
-        console.error('Get coupon by code error:', error);
-        res.status(500).json({ error: 'Failed to fetch coupon', message: error.message });
-    }
-};
-
-// Create new coupon
+/**
+ * Create a new coupon.
+ * 
+ * @route POST /api/coupons
+ * @access Private (Admin only)
+ */
 export const createCoupon = async (req, res) => {
     try {
-        // Verify campaign exists
-        const campaign = await Campaign.findById(req.body.campaignId);
-        if (!campaign) {
-            return res.status(404).json({ error: 'Campaign not found' });
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
         }
 
         const couponData = {
             ...req.body,
-            code: req.body.code.toUpperCase(),
-            createdBy: req.session.username || 'admin'
+            createdBy: req.user._id
         };
 
         const coupon = new Coupon(couponData);
-        await coupon.save();
+        const savedCoupon = await coupon.save();
 
-        res.status(201).json({
-            message: 'Coupon created successfully',
-            coupon
-        });
+        res.status(201).json(savedCoupon);
     } catch (error) {
         if (error.code === 11000) {
-            return res.status(400).json({ error: 'Coupon code already exists' });
+            return res.status(400).json({ message: 'Coupon code already exists' });
         }
-        console.error('Create coupon error:', error);
-        res.status(500).json({ error: 'Failed to create coupon', message: error.message });
+        res.status(500).json({ message: error.message });
     }
 };
 
-// Update coupon
-export const updateCoupon = async (req, res) => {
+/**
+ * Get all coupons with various filters (active status, campaign).
+ * 
+ * @route GET /api/coupons
+ * @access Private
+ */
+export const getCoupons = async (req, res) => {
     try {
-        const updateData = { ...req.body };
-        if (updateData.code) {
-            updateData.code = updateData.code.toUpperCase();
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
+        // Build filter object dynamically based on query params
+        const filter = {};
+        if (req.query.isActive !== undefined) {
+            filter.isActive = req.query.isActive === 'true';
+        }
+        if (req.query.campaignId) {
+            filter.campaignId = req.query.campaignId;
         }
 
-        const coupon = await Coupon.findByIdAndUpdate(
-            req.params.id,
-            { $set: updateData },
-            { new: true, runValidators: true }
-        ).populate('campaignId');
+        const coupons = await Coupon.find(filter)
+            .populate('campaignId', 'name') // Fetch campaign details
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
 
-        if (!coupon) {
-            return res.status(404).json({ error: 'Coupon not found' });
-        }
+        const total = await Coupon.countDocuments(filter);
 
         res.json({
-            message: 'Coupon updated successfully',
-            coupon
+            coupons,
+            page,
+            pages: Math.ceil(total / limit),
+            total
         });
     } catch (error) {
-        console.error('Update coupon error:', error);
-        res.status(500).json({ error: 'Failed to update coupon', message: error.message });
+        res.status(500).json({ message: error.message });
     }
 };
 
-// Activate coupon
-export const activateCoupon = async (req, res) => {
+/**
+ * Get active coupons specifically for users (e.g., checkout page).
+ * Only returns coupons that are currently valid.
+ * 
+ * @route GET /api/coupons/active
+ * @access Private
+ */
+export const getActiveCoupons = async (req, res) => {
     try {
-        const coupon = await Coupon.findByIdAndUpdate(
-            req.params.id,
-            { $set: { isActive: true } },
-            { new: true }
-        );
+        const now = new Date();
+        const coupons = await Coupon.find({
+            isActive: true,
+            startDate: { $lte: now }, // Started in the past or now
+            expiryDate: { $gte: now }, // Expiring in the future
+            $expr: {
+                $or: [
+                    { $eq: ["$maxUsage", null] }, // No max usage set
+                    { $lt: ["$currentUsage", "$maxUsage"] } // Or usage is below limit
+                ]
+            }
+        })
+            .select('code description discountType discountValue minPurchaseAmount expiryDate') // Return only necessary fields
+            .sort({ expiryDate: 1 }); // Show soonest expiring first
 
-        if (!coupon) {
-            return res.status(404).json({ error: 'Coupon not found' });
-        }
-
-        res.json({ message: 'Coupon activated', coupon });
+        res.json(coupons);
     } catch (error) {
-        console.error('Activate coupon error:', error);
-        res.status(500).json({ error: 'Failed to activate coupon', message: error.message });
+        res.status(500).json({ message: error.message });
     }
 };
 
-// Deactivate coupon
-export const deactivateCoupon = async (req, res) => {
+/**
+ * Get single coupon details by ID.
+ * 
+ * @route GET /api/coupons/:id
+ * @access Private
+ */
+export const getCouponById = async (req, res) => {
     try {
-        const coupon = await Coupon.findByIdAndUpdate(
-            req.params.id,
-            { $set: { isActive: false } },
-            { new: true }
-        );
-
-        if (!coupon) {
-            return res.status(404).json({ error: 'Coupon not found' });
+        const coupon = await Coupon.findById(req.params.id).populate('campaignId');
+        if (coupon) {
+            res.json(coupon);
+        } else {
+            res.status(404).json({ message: 'Coupon not found' });
         }
-
-        res.json({ message: 'Coupon deactivated', coupon });
     } catch (error) {
-        console.error('Deactivate coupon error:', error);
-        res.status(500).json({ error: 'Failed to deactivate coupon', message: error.message });
+        res.status(500).json({ message: error.message });
     }
 };
 
-// Delete coupon
+/**
+ * Update an existing coupon.
+ * 
+ * @route PUT /api/coupons/:id
+ * @access Private (Admin only)
+ */
+export const updateCoupon = async (req, res) => {
+    try {
+        const coupon = await Coupon.findById(req.params.id);
+
+        if (coupon) {
+            // Update logic handled by Mongoose based on passed body
+            Object.assign(coupon, req.body);
+            const updatedCoupon = await coupon.save();
+            res.json(updatedCoupon);
+        } else {
+            res.status(404).json({ message: 'Coupon not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+/**
+ * Delete a coupon.
+ * 
+ * @route DELETE /api/coupons/:id
+ * @access Private (Admin only)
+ */
 export const deleteCoupon = async (req, res) => {
     try {
-        const coupon = await Coupon.findByIdAndDelete(req.params.id);
+        const coupon = await Coupon.findById(req.params.id);
 
-        if (!coupon) {
-            return res.status(404).json({ error: 'Coupon not found' });
+        if (coupon) {
+            await coupon.deleteOne();
+            res.json({ message: 'Coupon removed' });
+        } else {
+            res.status(404).json({ message: 'Coupon not found' });
         }
-
-        res.json({ message: 'Coupon deleted successfully' });
     } catch (error) {
-        console.error('Delete coupon error:', error);
-        res.status(500).json({ error: 'Failed to delete coupon', message: error.message });
+        res.status(500).json({ message: error.message });
     }
 };
 
-// Validate coupon without using it
+/**
+ * Validate a coupon code for a specific user and purchase amount.
+ * 
+ * @route POST /api/coupons/validate
+ * @access Private
+ */
 export const validateCoupon = async (req, res) => {
     try {
-        const { couponCode, amount } = req.body;
+        const { code, amount } = req.body;
+        const userId = req.user._id;
 
-        const coupon = await Coupon.findByCode(couponCode);
+        const coupon = await Coupon.findOne({ code });
 
         if (!coupon) {
-            return res.status(404).json({
-                valid: false,
-                error: 'Coupon not found'
+            return res.status(404).json({ message: 'Invalid coupon code' });
+        }
+
+        // Step 1: Basic validity check (expiry, start date, global limit)
+        const validity = coupon.isValid(amount);
+        if (!validity.valid) {
+            return res.status(400).json({ message: validity.reason });
+        }
+
+        // Step 2: Check per-user usage limit
+        const userUsageCount = await UsageTracking.countDocuments({
+            couponId: coupon._id,
+            userId: userId
+        });
+
+        if (userUsageCount >= coupon.userMaxUsage) {
+            return res.status(400).json({
+                message: 'You have assumed the maximum usage limit for this coupon'
             });
         }
 
-        const validation = coupon.canBeUsed(parseFloat(amount));
-
-        if (!validation.canUse) {
-            return res.json({
-                valid: false,
-                error: validation.reason,
-                coupon: {
-                    code: coupon.code,
-                    description: coupon.description
-                }
-            });
-        }
-
-        const discountAmount = coupon.calculateDiscount(parseFloat(amount));
-        const finalAmount = parseFloat(amount) - discountAmount;
+        // Step 3: Calculate potential discount
+        const discountAmount = coupon.calculateDiscount(amount);
 
         res.json({
             valid: true,
             coupon: {
                 code: coupon.code,
-                description: coupon.description,
                 discountType: coupon.discountType,
                 discountValue: coupon.discountValue
             },
             calculation: {
-                originalAmount: parseFloat(amount),
-                discountAmount,
-                finalAmount
+                originalAmount: amount,
+                discountAmount: discountAmount,
+                finalAmount: amount - discountAmount
             }
         });
+
     } catch (error) {
-        console.error('Validate coupon error:', error);
-        res.status(500).json({ error: 'Failed to validate coupon', message: error.message });
+        console.error('Validation Error:', error);
+        res.status(500).json({ message: error.message });
     }
 };

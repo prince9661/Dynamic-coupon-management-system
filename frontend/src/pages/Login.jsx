@@ -21,14 +21,12 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [validationError, setValidationError] = useState('');
 
-  // Sync state with URL
   useEffect(() => {
     setIsLogin(location.pathname !== '/register');
     dispatch(clearError());
     setValidationError('');
   }, [location.pathname, dispatch]);
 
-  // Redirect if authenticated
   useEffect(() => {
     if (isAuthenticated) {
       navigate('/dashboard');
@@ -68,31 +66,24 @@ export default function Login() {
     }
   };
 
-  // GitHub Dark Mode Styles
   const inputClasses = "w-full bg-[#0d1117] border border-[#30363d] rounded-[6px] px-3 py-[5px] text-white text-[16px] md:text-[14px] focus:outline-none focus:border-[#58a6ff] focus:ring-2 focus:ring-[#58a6ff]/30 transition-all shadow-sm placeholder-[#484f58]";
   const labelClasses = "block text-white text-[14px] font-semibold mb-2";
 
   return (
     <div className="min-h-screen bg-transparent text-[#c9d1d9] flex flex-col justify-center items-center font-sans relative py-12">
 
-
-
-      {/* Animated Pixel Art Background (Exclusive to Login/Register) */}
       <div className="pixel-background-container fixed inset-0 z-0">
         <div className="pixel-background"></div>
       </div>
 
-      {/* Header - Logo Removed */}
       <div className="mb-8 text-center z-10">
         <h1 className="text-[28px] font-bold text-white tracking-tight">
           {isLogin ? "Sign in to COUPON PULSE" : "Join COUPON PULSE"}
         </h1>
       </div>
 
-      {/* Main Card */}
       <div className={`w-full z-10 transition-all duration-300 px-4 ${isLogin ? 'max-w-[550px]' : 'max-w-[400px]'}`}>
 
-        {/* Error Banner */}
         {(error || validationError) && (
           <div className="mb-4 p-4 text-[13px] text-white bg-[rgba(255,123,114,0.1)] border border-[rgba(255,123,114,0.4)] rounded-[6px] flex items-start">
             <span className="mr-2 font-bold text-lg leading-none text-[#ff7b72]">•</span>
@@ -170,7 +161,6 @@ export default function Login() {
                     />
                   </div>
 
-                  {/* Role Selection - GitHub Style Radio */}
                   <div>
                     <label className={labelClasses}>I am a...</label>
                     <div className="flex gap-2 mt-1">
@@ -205,7 +195,6 @@ export default function Login() {
             </form>
           </div>
 
-          {/* Consolidated Links Section */}
           <div className="mt-8 pt-6 border-t border-[#30363d] flex flex-col gap-4 text-center">
             <p className="text-[14px] text-[#8b949e]">
               {isLogin ? "New to COUPON PULSE? " : "Already have an account? "}

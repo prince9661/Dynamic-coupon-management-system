@@ -1,46 +1,34 @@
-/**
- * ============================================
- * UNIT IV - MongoDB: Order Routes
- * ============================================
- * 
- * Order API:
- * - CRUD operations for orders
- * - Demonstrates: MongoDB operations, Mongoose queries
- */
-
 import express from 'express';
-import { requireAuth } from '../middleware/auth.js';
-import * as orderController from '../controllers/orderController.js';
+import { createOrder, applyCouponToOrder, getOrders, updateOrderStatus } from '../controllers/orderController.js';
+import { protect, limitTo } from '../middleware/auth.js';
 
 const router = express.Router();
 
-/**
- * GET /api/orders
- * Get all orders for current user (or all if admin)
- * Demonstrates: GET method, MongoDB queries
- */
-router.get('/', requireAuth, orderController.getOrders);
+router.use(protect);
 
 /**
- * GET /api/orders/:id
- * Get single order by ID
+ * Route: POST /api/orders
+ * Description: Create a new pending order
  */
-router.get('/:id', requireAuth, orderController.getOrderById);
+router.post('/', createOrder);
 
 /**
- * POST /api/orders
- * Create new order
- * Demonstrates: POST method, MongoDB CREATE
+ * Route: POST /api/orders/apply-coupon
+ * Description: Apply a coupon to a pending order
  */
-router.post('/', requireAuth, orderController.createOrder);
+router.post('/apply-coupon', applyCouponToOrder);
 
 /**
- * PUT /api/orders/:id
- * Update order
- * Demonstrates: PUT method, MongoDB UPDATE
+ * Route: GET /api/orders
+ * Description: Get order history
  */
-router.put('/:id', requireAuth, orderController.updateOrder);
+router.get('/', getOrders);
+
+/**
+ * Route: PUT /api/orders/:id/status
+ * Description: Update order status (accept/reject/complete)
+ * Access: Admin only
+ */
+router.put('/:id/status', limitTo('admin'), updateOrderStatus);
 
 export default router;
-
-

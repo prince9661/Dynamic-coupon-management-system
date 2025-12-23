@@ -1,10 +1,14 @@
-// List all campaigns
-
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchCampaigns, deleteCampaign, updateCampaign } from '../store/slices/campaignSlice.js';
 
+/**
+ * CampaignList Component
+ * 
+ * Displays a grid of marketing campaigns.
+ * Allows filtering, deletion and toggling active status (Admin).
+ */
 const CampaignList = () => {
   const dispatch = useDispatch();
   const { campaigns, pagination, isLoading } = useSelector((state) => state.campaigns);
@@ -39,7 +43,6 @@ const CampaignList = () => {
       id: campaign._id,
       data: { isActive: !campaign.isActive }
     }));
-    // We don't need to refetch if the store updates properly, but for safety with filters:
     dispatch(fetchCampaigns(filters));
   };
 
@@ -90,11 +93,10 @@ const CampaignList = () => {
               <div key={campaign._id} className="bg-[#010409] border border-[#30363d] rounded-[12px] p-6 shadow-xl hover:-translate-y-1 transition-transform duration-300">
                 <div className="flex justify-between items-start mb-4">
                   <h3 className="text-xl font-bold text-white tracking-tight">{campaign.name}</h3>
-                  <span
-                    className={`text-xs font-medium px-2 py-0.5 rounded-full border ${campaign.isActive
-                      ? 'bg-[#1f6feb]/10 text-[#58a6ff] border-[#1f6feb]/20'
-                      : 'bg-[#30363d]/50 text-[#8b949e] border-[#30363d]'
-                      }`}
+                  <span className={`text-xs font-medium px-2 py-0.5 rounded-full border ${campaign.isActive
+                    ? 'bg-[#1f6feb]/10 text-[#58a6ff] border-[#1f6feb]/20'
+                    : 'bg-[#30363d]/50 text-[#8b949e] border-[#30363d]'
+                    }`}
                   >
                     {campaign.isActive ? 'Active' : 'Inactive'}
                   </span>
@@ -104,12 +106,10 @@ const CampaignList = () => {
                   <p className="flex justify-between"><span>Start:</span> <span className="text-[#c9d1d9]">{formatDate(campaign.startDate)}</span></p>
                   <p className="flex justify-between"><span>End:</span> <span className="text-[#c9d1d9]">{formatDate(campaign.endDate)}</span></p>
                 </div>
+                {/* Admin Actions */}
                 {user?.role === 'admin' && (
                   <div className="flex space-x-4 pt-4 border-t border-[#30363d]">
-                    <Link
-                      to={`/campaigns/edit/${campaign._id}`}
-                      className="text-[#58a6ff] text-sm font-medium hover:underline"
-                    >
+                    <Link to={`/campaigns/edit/${campaign._id}`} className="text-[#58a6ff] text-sm font-medium hover:underline">
                       Edit
                     </Link>
                     <button
@@ -136,6 +136,7 @@ const CampaignList = () => {
         </div>
       )}
 
+      {/* Pagination */}
       {pagination.pages > 1 && (
         <div className="flex justify-center items-center space-x-4 pt-8 border-t border-[#30363d]">
           <button
@@ -162,5 +163,3 @@ const CampaignList = () => {
 };
 
 export default CampaignList;
-
-

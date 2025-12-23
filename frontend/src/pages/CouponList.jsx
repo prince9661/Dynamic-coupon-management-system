@@ -1,50 +1,58 @@
-// List all coupons
-
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchCoupons, deleteCoupon, activateCoupon, deactivateCoupon } from '../store/slices/couponSlice.js';
 
-// CouponList Component
+/**
+ * CouponList Component
+ * 
+ * Displays a paginated list of coupons with filtering options.
+ * Allows Admins to toggle active status or delete coupons.
+ */
 const CouponList = () => {
   const dispatch = useDispatch();
   const { coupons, pagination, isLoading, error } = useSelector((state) => state.coupons);
   const { user } = useSelector((state) => state.auth);
 
+  // Local state for filters
   const [filters, setFilters] = useState({
-    isActive: '',
+    isActive: '', // 'true' | 'false' | ''
     campaignId: '',
     page: 1,
   });
 
-  // Fetch coupons when filters change
+  // Fetch data when filters change
   useEffect(() => {
     dispatch(fetchCoupons(filters));
   }, [dispatch, filters]);
 
-  // Handle filter change
+  // Handle filter changes (resets to page 1)
   const handleFilterChange = (e) => {
     setFilters({
       ...filters,
       [e.target.name]: e.target.value,
-      page: 1, // Reset to first page
+      page: 1,
     });
   };
 
-  // Handle pagination
   const handlePageChange = (newPage) => {
     setFilters({ ...filters, page: newPage });
   };
 
-  // Handle delete
+  /**
+   * Delete coupon handler (Admin only).
+   */
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this coupon?')) {
       await dispatch(deleteCoupon(id));
+      // Refresh list
       dispatch(fetchCoupons(filters));
     }
   };
 
-  // Handle activate/deactivate
+  /**
+   * Toggle coupon active state.
+   */
   const handleToggleActive = async (coupon) => {
     if (coupon.isActive) {
       await dispatch(deactivateCoupon(coupon._id));
@@ -54,7 +62,6 @@ const CouponList = () => {
     dispatch(fetchCoupons(filters));
   };
 
-  // Format date helper
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString();
   };
@@ -63,6 +70,7 @@ const CouponList = () => {
     <div className="space-y-12">
       <div className="flex justify-between items-end border-b border-[#30363d] pb-4">
         <h1 className="text-4xl font-bold text-white tracking-tight">Coupons</h1>
+        {/* Create Button (Admin only) */}
         {user?.role === 'admin' && (
           <Link
             to="/coupons/new"
@@ -73,7 +81,7 @@ const CouponList = () => {
         )}
       </div>
 
-      {/* Filters */}
+      {/* Filter Bar */}
       <div className="border-b border-[#30363d] pb-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
@@ -92,21 +100,19 @@ const CouponList = () => {
         </div>
       </div>
 
-      {/* Error Display */}
       {error && (
         <div className="bg-[rgba(255,123,114,0.1)] border border-[rgba(255,123,114,0.4)] text-[#ff7b72] px-4 py-3 rounded-[6px] text-sm">
           {error}
         </div>
       )}
 
-      {/* Loading State */}
       {isLoading && (
         <div className="text-center py-16">
           <p className="text-[#8b949e]">Loading coupons...</p>
         </div>
       )}
 
-      {/* Coupons List */}
+      {/* Results Table */}
       {!isLoading && (
         <div className="overflow-hidden border border-[#30363d] rounded-[6px] bg-[#0d1117]">
           <table className="min-w-full">
@@ -154,21 +160,18 @@ const CouponList = () => {
                       {formatDate(coupon.expiryDate)}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">
-                      <span
-                        className={`text-xs font-medium px-2 py-0.5 rounded-full border ${coupon.isActive
-                          ? 'bg-[#238636]/10 text-[#3fb950] border-[#238636]/20'
-                          : 'bg-[#30363d]/50 text-[#8b949e] border-[#30363d]'
-                          }`}
+                      <span className={`text-xs font-medium px-2 py-0.5 rounded-full border ${coupon.isActive
+                        ? 'bg-[#238636]/10 text-[#3fb950] border-[#238636]/20'
+                        : 'bg-[#30363d]/50 text-[#8b949e] border-[#30363d]'
+                        }`}
                       >
                         {coupon.isActive ? 'Active' : 'Inactive'}
                       </span>
                     </td>
+                    {/* Admin Actions */}
                     {user?.role === 'admin' && (
                       <td className="px-4 py-3 whitespace-nowrap text-sm font-medium space-x-3">
-                        <Link
-                          to={`/coupons/edit/${coupon._id}`}
-                          className="text-[#58a6ff] hover:underline"
-                        >
+                        <Link to={`/coupons/edit/${coupon._id}`} className="text-[#58a6ff] hover:underline">
                           Edit
                         </Link>
                         <button
@@ -199,7 +202,7 @@ const CouponList = () => {
         </div>
       )}
 
-      {/* Pagination */}
+      {/* Pagination Controls */}
       {pagination.pages > 1 && (
         <div className="flex justify-center items-center space-x-4 pt-6 border-t border-[#30363d]">
           <button
@@ -226,5 +229,3 @@ const CouponList = () => {
 };
 
 export default CouponList;
-
-

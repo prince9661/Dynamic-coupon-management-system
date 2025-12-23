@@ -1,56 +1,36 @@
-/**
- * ============================================
- * UNIT II - Express: Authentication Routes
- * ============================================
- * 
- * Authentication API:
- * - User registration and login
- * - Session management
- * - Demonstrates: POST requests, session handling
- */
-
 import express from 'express';
-import { body } from 'express-validator';
-import * as authController from '../controllers/authController.js';
+import { registerUser, loginUser, logoutUser, getUserProfile } from '../controllers/authController.js';
+import { protect } from '../middleware/auth.js';
+import { registerValidation } from '../middleware/validation.js';
 
 const router = express.Router();
 
 /**
- * POST /api/auth/register
- * Register a new user
- * Demonstrates: POST method, input validation, password hashing
+ * Route: POST /api/auth/register
+ * Description: Register a new user
+ * Access: Public
  */
-router.post('/register', [
-  body('username').trim().isLength({ min: 3, max: 50 }).withMessage('Username must be 3-50 characters'),
-  body('email').isEmail().withMessage('Valid email is required'),
-  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
-  body('role').optional().isIn(['user', 'admin']).withMessage('Role must be user or admin')
-], authController.register);
+router.post('/register', registerValidation, registerUser);
 
 /**
- * POST /api/auth/login
- * Login user
- * Demonstrates: POST method, password verification, session creation
+ * Route: POST /api/auth/login
+ * Description: Authenticate user and get token
+ * Access: Public
  */
-router.post('/login', [
-  body('email').isEmail().withMessage('Valid email is required'),
-  body('password').notEmpty().withMessage('Password is required')
-], authController.login);
+router.post('/login', loginUser);
 
 /**
- * POST /api/auth/logout
- * Logout user
- * Demonstrates: Session destruction
+ * Route: POST /api/auth/logout
+ * Description: key logout logic (clear cookies)
+ * Access: Private (Requires login)
  */
-router.post('/logout', authController.logout);
+router.post('/logout', protect, logoutUser);
 
 /**
- * GET /api/auth/me
- * Get current user info
- * Demonstrates: Session access, GET method
+ * Route: GET /api/auth/profile
+ * Description: Get current user's profile details
+ * Access: Private
  */
-router.get('/me', authController.getMe);
+router.get('/profile', protect, getUserProfile);
 
 export default router;
-
-

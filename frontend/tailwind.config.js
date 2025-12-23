@@ -30,7 +30,6 @@ export default {
         ],
       },
       colors: {
-        // Hello Heco-inspired neutral palette
         primary: {
           DEFAULT: '#000000',
           50: '#fafafa',
@@ -44,10 +43,9 @@ export default {
           800: '#262626',
           900: '#1a1a1a',
         },
-        // Minimal accent (if needed)
         accent: {
           DEFAULT: '#000000',
-          light: '#4a4a4a',
+          50: '#4a4a4a',
         },
       },
       spacing: {
@@ -67,6 +65,4 @@ export default {
     },
     plugins: [],
   }
-
-
 }

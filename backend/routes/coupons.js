@@ -1,88 +1,70 @@
-/**
- * ============================================
- * UNIT II - Express: Coupon Routes
- * ============================================
- * 
- * Coupon API:
- * - CRUD operations for coupons
- * - Coupon validation and usage checking
- * - Demonstrates: All HTTP methods, MongoDB operations
- */
-
 import express from 'express';
-import { requireAuth, requireAdmin } from '../middleware/auth.js';
-import { validateCoupon, validateObjectId, validateCouponUsage } from '../middleware/validation.js';
-import * as couponController from '../controllers/couponController.js';
+import {
+    createCoupon,
+    getCoupons,
+    getCouponById,
+    updateCoupon,
+    deleteCoupon,
+    validateCoupon,
+    getActiveCoupons
+} from '../controllers/couponController.js';
+import { protect, limitTo } from '../middleware/auth.js';
+import { couponValidation, validateCouponRules } from '../middleware/validation.js';
 
 const router = express.Router();
 
-/**
- * GET /api/coupons
- * Get all coupons with filtering
- * Demonstrates: GET method, query parameters, MongoDB queries
- */
-router.get('/', couponController.getCoupons);
+// Apply authentication middleware to all routes in this file
+router.use(protect);
 
 /**
- * GET /api/coupons/active
- * Get all active and valid coupons
- * Demonstrates: Static methods, custom queries
+ * Route: GET /api/coupons/active
+ * Description: Get a list of currently active coupons for users
+ * Access: Private (All authenticated users)
  */
-router.get('/active', couponController.getActiveCoupons);
+router.get('/active', getActiveCoupons);
 
 /**
- * GET /api/coupons/:id
- * Get single coupon by ID
+ * Route: POST /api/coupons/validate
+ * Description: Check if a coupon code is valid for a purchase
+ * Access: Private (All authenticated users)
  */
-router.get('/:id', validateObjectId, couponController.getCouponById);
+router.post('/validate', validateCouponRules, validateCoupon);
 
 /**
- * GET /api/coupons/code/:code
- * Get coupon by code
- * Demonstrates: Static method usage
+ * Route: GET /api/coupons
+ * Description: Get all coupons (with filters)
+ * Access: Private (All authenticated users)
  */
-router.get('/code/:code', couponController.getCouponByCode);
+router.get('/', getCoupons);
 
 /**
- * POST /api/coupons
- * Create new coupon
- * Demonstrates: POST method, MongoDB create, validation
+ * Route: GET /api/coupons/:id
+ * Description: Get details of a single coupon
+ * Access: Private (All authenticated users)
  */
-router.post('/', requireAdmin, validateCoupon, couponController.createCoupon);
+router.get('/:id', getCouponById);
+
+// Admin Only Routes below
 
 /**
- * PUT /api/coupons/:id
- * Update coupon
- * Demonstrates: PUT method, MongoDB update
+ * Route: POST /api/coupons
+ * Description: Create a new coupon
+ * Access: Private (Admin only)
  */
-router.put('/:id', requireAdmin, validateObjectId, couponController.updateCoupon);
+router.post('/', limitTo('admin'), couponValidation, createCoupon);
 
 /**
- * PATCH /api/coupons/:id/activate
- * Activate coupon
+ * Route: PUT /api/coupons/:id
+ * Description: Update an existing coupon
+ * Access: Private (Admin only)
  */
-router.patch('/:id/activate', requireAdmin, validateObjectId, couponController.activateCoupon);
+router.put('/:id', limitTo('admin'), updateCoupon);
 
 /**
- * PATCH /api/coupons/:id/deactivate
- * Deactivate coupon
+ * Route: DELETE /api/coupons/:id
+ * Description: Delete a coupon
+ * Access: Private (Admin only)
  */
-router.patch('/:id/deactivate', requireAdmin, validateObjectId, couponController.deactivateCoupon);
-
-/**
- * DELETE /api/coupons/:id
- * Delete coupon
- * Demonstrates: DELETE method, MongoDB delete
- */
-router.delete('/:id', requireAdmin, validateObjectId, couponController.deleteCoupon);
-
-/**
- * POST /api/coupons/validate
- * Validate coupon without using it
- * Demonstrates: POST method, coupon validation logic
- */
-router.post('/validate', validateCouponUsage, couponController.validateCoupon);
+router.delete('/:id', limitTo('admin'), deleteCoupon);
 
 export default router;
-
-

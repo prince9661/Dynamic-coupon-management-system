@@ -1,9 +1,13 @@
-// Admin Orders Page
-
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchOrders, updateOrderStatus } from '../store/slices/orderSlice.js';
 
+/**
+ * AdminOrders Component
+ * 
+ * Displays ALL orders in the system (Admin only view).
+ * Allows admins to Accept/Reject pending orders.
+ */
 const AdminOrders = () => {
     const dispatch = useDispatch();
     const { orders, pagination, isLoading } = useSelector((state) => state.orders);
@@ -71,18 +75,18 @@ const AdminOrders = () => {
                                             ${parseFloat(order.finalAmount).toFixed(2)}
                                         </td>
                                         <td className="px-4 py-3 whitespace-nowrap">
-                                            <span
-                                                className={`text-xs font-medium px-2 py-0.5 rounded-full border ${order.status === 'completed'
-                                                    ? 'bg-[#238636]/10 text-[#3fb950] border-[#238636]/20'
-                                                    : order.status === 'pending'
-                                                        ? 'bg-[#9e6a03]/10 text-[#d29922] border-[#9e6a03]/20'
-                                                        : 'bg-[#da3633]/10 text-[#f85149] border-[#f85149]/40'
-                                                    }`}
+                                            <span className={`text-xs font-medium px-2 py-0.5 rounded-full border ${order.status === 'completed'
+                                                ? 'bg-[#238636]/10 text-[#3fb950] border-[#238636]/20'
+                                                : order.status === 'pending'
+                                                    ? 'bg-[#9e6a03]/10 text-[#d29922] border-[#9e6a03]/20'
+                                                    : 'bg-[#da3633]/10 text-[#f85149] border-[#f85149]/40'
+                                                }`}
                                             >
                                                 {order.status}
                                             </span>
                                         </td>
                                         <td className="px-4 py-3 whitespace-nowrap text-sm">
+                                            {/* Action Buttons for Pending Orders */}
                                             {order.status === 'pending' && (
                                                 <div className="flex space-x-2">
                                                     <button
@@ -117,6 +121,7 @@ const AdminOrders = () => {
                 </div>
             )}
 
+            {/* Pagination */}
             {pagination.pages > 1 && (
                 <div className="flex justify-center items-center space-x-4 pt-6 border-t border-[#30363d]">
                     <button

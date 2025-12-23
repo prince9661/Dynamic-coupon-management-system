@@ -1,77 +1,51 @@
-/**
- * ============================================
- * UNIT IV - MongoDB & Mongoose: Campaign Schema
- * ============================================
- * 
- * Campaign Model:
- * - Represents a marketing campaign that contains multiple coupons
- * - Demonstrates: Schema definition, validation, relationships
- */
-
 import mongoose from 'mongoose';
 
+/**
+ * Campaign Schema
+ * 
+ * Groups coupons under a marketing campaign.
+ * Allows managing the lifecycle of multiple coupons (e.g., Summer Sale).
+ */
 const campaignSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'Campaign name is required'],
+    required: true,
     trim: true,
-    maxlength: [100, 'Campaign name cannot exceed 100 characters']
+    unique: true
   },
   description: {
-    type: String,
-    trim: true,
-    maxlength: [500, 'Description cannot exceed 500 characters']
+    type: String
   },
   startDate: {
     type: Date,
-    required: [true, 'Start date is required'],
-    default: Date.now
+    required: true
   },
   endDate: {
     type: Date,
-    required: [true, 'End date is required']
+    required: true
   },
   isActive: {
     type: Boolean,
     default: true
   },
   createdBy: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     required: true
   }
 }, {
-  timestamps: true, // Automatically adds createdAt and updatedAt
-  collection: 'campaigns' // Explicit collection name
+  timestamps: true
 });
 
-// Index for better query performance
-campaignSchema.index({ isActive: 1, endDate: 1 });
-campaignSchema.index({ startDate: 1, endDate: 1 });
-
-// Virtual for checking if campaign is currently active
-campaignSchema.virtual('isCurrentlyActive').get(function () {
-  const now = new Date();
-  return this.isActive && now >= this.startDate && now <= this.endDate;
+/**
+ * Pre-validate middleware to ensure logical date ranges.
+ */
+campaignSchema.pre('validate', function (next) {
+  if (this.startDate && this.endDate && this.startDate > this.endDate) {
+    this.invalidate('endDate', 'End date must be after start date');
+  }
+  next();
 });
-
-// Method to get campaign statistics
-campaignSchema.methods.getStats = async function () {
-  const Coupon = mongoose.model('Coupon');
-  const totalCoupons = await Coupon.countDocuments({ campaignId: this._id });
-  const activeCoupons = await Coupon.countDocuments({
-    campaignId: this._id,
-    isActive: true
-  });
-
-  return {
-    totalCoupons,
-    activeCoupons,
-    inactiveCoupons: totalCoupons - activeCoupons
-  };
-};
 
 const Campaign = mongoose.model('Campaign', campaignSchema);
-
 export default Campaign;
-
-

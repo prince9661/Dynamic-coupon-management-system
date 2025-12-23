@@ -1,40 +1,25 @@
-/**
- * ============================================
- * UNIT II - Express: Routing
- * ============================================
- * 
- * API Routes:
- * - Demonstrates: express.Router, RESTful API design
- * - GET, POST, PUT, DELETE methods
- * - Route organization and modularity
- */
-
 import express from 'express';
-import { requireAuth, requireAdmin } from '../middleware/auth.js';
+import authRoutes from './auth.js';
 import couponRoutes from './coupons.js';
 import campaignRoutes from './campaigns.js';
-import usageRoutes from './usage.js';
-import authRoutes from './auth.js';
 import orderRoutes from './orders.js';
+import usageRoutes from './usage.js';
 
 const router = express.Router();
 
-// Health check route (no authentication required)
-router.get('/health', (req, res) => {
-  res.status(200).json({ 
-    status: 'OK',
-    message: 'API is operational',
-    timestamp: new Date().toISOString()
-  });
-});
-
-// Mount route modules
+// Mount Auth routes (Login, Register, Profile)
 router.use('/auth', authRoutes);
-router.use('/campaigns', campaignRoutes);
+
+// Mount Coupon routes (CRUD, Validate)
 router.use('/coupons', couponRoutes);
-router.use('/usage', usageRoutes);
+
+// Mount Campaign routes (CRUD)
+router.use('/campaigns', campaignRoutes);
+
+// Mount Order routes (Create, Apply Coupon, History)
 router.use('/orders', orderRoutes);
 
+// Mount Usage Tracking routes (Stats, History)
+router.use('/usage', usageRoutes);
+
 export default router;
-
-

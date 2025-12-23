@@ -1,86 +1,82 @@
-/**
- * ============================================
- * UNIT IV - MongoDB & Mongoose: User Schema
- * ============================================
- * 
- * User Model:
- * - Stores user authentication and profile data
- * - Demonstrates: Schema definition, validation, password hashing
- */
-
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
+/**
+ * User Schema
+ * 
+ * Defines the structure for users in the system.
+ * Handles authentication details and role-based access control.
+ */
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
-    required: [true, 'Username is required'],
+    required: true,
     unique: true,
     trim: true,
-    minlength: [3, 'Username must be at least 3 characters'],
-    maxlength: [50, 'Username cannot exceed 50 characters']
+    minlength: 3
   },
   email: {
     type: String,
-    required: [true, 'Email is required'],
+    required: true,
     unique: true,
-    lowercase: true,
     trim: true,
-    match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email']
+    lowercase: true,
+    match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
   },
-  passwordHash: {
+  password: {
     type: String,
-    required: [true, 'Password is required'],
-    minlength: [6, 'Password must be at least 6 characters']
+    required: true,
+    minlength: 6,
+    select: false // Do not return password by default in queries
   },
   role: {
     type: String,
-    enum: ['user', 'admin'],
-    default: 'user'
+    enum: ['admin', 'customer'],
+    default: 'customer'
+  },
+  isActive: {
+    type: Boolean,
+    default: true
+  },
+  lastLogin: {
+    type: Date
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
   }
 }, {
-  timestamps: true,
-  collection: 'users'
+  timestamps: true // Automatically manage createdAt and updatedAt fields
 });
 
-// Index for better query performance
-userSchema.index({ email: 1 });
-userSchema.index({ username: 1 });
-
-// Method to compare password
-userSchema.methods.comparePassword = async function(candidatePassword) {
-  return await bcrypt.compare(candidatePassword, this.passwordHash);
-};
-
-// Static method to find user by email
-userSchema.statics.findByEmail = function(email) {
-  return this.findOne({ email: email.toLowerCase() });
-};
-
-// Static method to find user by username
-userSchema.statics.findByUsername = function(username) {
-  return this.findOne({ username });
-};
-
-// Pre-save hook to hash password (if modified)
-userSchema.pre('save', async function(next) {
-  // Only hash the password if it has been modified (or is new)
-  if (!this.isModified('passwordHash')) {
+/**
+ * Pre-save middleware to hash the password before saving to database.
+ * Only hashes the password if it has been modified (or is new).
+ */
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) {
     return next();
   }
 
   try {
-    // Hash password with cost of 10
-    const hashedPassword = await bcrypt.hash(this.passwordHash, 10);
-    this.passwordHash = hashedPassword;
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
     next();
   } catch (error) {
     next(error);
   }
 });
 
+/**
+ * Method to compare a candidate password with the user's hashed password.
+ * Used during login to verify credentials.
+ * 
+ * @param {string} candidatePassword - The plain text password to check.
+ * @returns {Promise<boolean>} - True if passwords match, false otherwise.
+ */
+userSchema.methods.comparePassword = async function (candidatePassword) {
+  return await bcrypt.compare(candidatePassword, this.password);
+};
+
 const User = mongoose.model('User', userSchema);
-
 export default User;
-
-

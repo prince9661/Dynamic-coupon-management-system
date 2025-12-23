@@ -1,10 +1,14 @@
-// Campaign Form to create/edit campaigns
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { createCampaign, updateCampaign, fetchCampaignById } from '../store/slices/campaignSlice.js';
 
+/**
+ * CampaignForm Component
+ * 
+ * Handles creation and editing of campaigns.
+ * Validates dates (Start vs End).
+ */
 const CampaignForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -13,6 +17,7 @@ const CampaignForm = () => {
 
   const { currentCampaign } = useSelector((state) => state.campaigns);
 
+  // Form State
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -29,6 +34,7 @@ const CampaignForm = () => {
     }
   }, [dispatch, id, isEditMode]);
 
+  // Load existing data for Edit mode
   useEffect(() => {
     if (isEditMode && currentCampaign) {
       setFormData({
@@ -54,6 +60,10 @@ const CampaignForm = () => {
     }
   };
 
+  /**
+   * Validate form data.
+   * Ensures dates are logical (Start < End).
+   */
   const validate = () => {
     const newErrors = {};
 
@@ -114,6 +124,7 @@ const CampaignForm = () => {
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Name Field */}
           <div>
             <label htmlFor="name" className="block text-sm font-semibold text-white mb-2">
               Campaign Name <span className="text-[#ff7b72]">*</span>
@@ -130,6 +141,7 @@ const CampaignForm = () => {
             {errors.name && <p className="text-[#ff7b72] text-xs mt-1">{errors.name}</p>}
           </div>
 
+          {/* Description Field */}
           <div>
             <label htmlFor="description" className="block text-sm font-semibold text-white mb-2">
               Description
@@ -144,6 +156,7 @@ const CampaignForm = () => {
             />
           </div>
 
+          {/* Date Fields */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label htmlFor="startDate" className="block text-sm font-semibold text-white mb-2">
@@ -178,6 +191,7 @@ const CampaignForm = () => {
             </div>
           </div>
 
+          {/* Buttons */}
           <div className="flex space-x-4 pt-8 border-t border-[#30363d]">
             <button
               type="submit"
@@ -201,4 +215,3 @@ const CampaignForm = () => {
 };
 
 export default CampaignForm;
-

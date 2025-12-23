@@ -1,5 +1,3 @@
-// Dashboard containing statistics
-
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -8,50 +6,64 @@ import { fetchCampaigns } from '../store/slices/campaignSlice.js';
 import { fetchOrders } from '../store/slices/orderSlice.js';
 import { onCouponUsed } from '../utils/socket.js';
 
-// Dashboard Component
+/**
+ * Dashboard Component
+ * 
+ * Main hub for authenticated users.
+ * Displays summary statistics (widgets) and recent activity lists.
+ * Shows different quick actions based on user role (Admin vs Customer).
+ */
 const Dashboard = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
+  // Select data from various slices
   const { coupons, pagination: couponPagination } = useSelector((state) => state.coupons);
   const { campaigns, pagination: campaignPagination } = useSelector((state) => state.campaigns);
   const { orders, pagination: orderPagination } = useSelector((state) => state.orders);
 
-  // Fetch data on mount
+  /**
+   * Initial data fetch on mount.
+   */
   useEffect(() => {
     dispatch(fetchCoupons({ page: 1, limit: 5 }));
     dispatch(fetchCampaigns({ page: 1, limit: 5 }));
     dispatch(fetchOrders({ page: 1, limit: 5 }));
   }, [dispatch]);
 
-  // Listen to real-time coupon usage updates
+  /**
+   * Setup Real-time updates via Socket.IO.
+   * Refreshes data when 'couponUsed' event is received.
+   */
   useEffect(() => {
     const handleCouponUsed = (data) => {
       console.log('Real-time update:', data);
-      // Refresh data when coupon is used
+      // Refresh coupons list to show updated usage counts
       dispatch(fetchCoupons({ page: 1, limit: 5 }));
     };
 
     onCouponUsed(handleCouponUsed);
 
+    // Cleanup listener on unmount (handled by socket utility implicitly or can be explicit)
     return () => {
-      // Cleanup listener if needed
+      // socket.off('couponUsed', handleCouponUsed);
     };
   }, [dispatch]);
 
-  // Calculate statistics
+  // Calculate quick stats
   const activeCoupons = coupons.filter(c => c.isActive).length;
   const activeCampaigns = campaigns.filter(c => c.isActive).length;
 
   return (
     <div className="space-y-12">
-      {/* Hero Section */}
+      {/* Header Section */}
       <div className="space-y-2">
         <h1 className="text-4xl font-bold text-white tracking-tight">Dashboard</h1>
         <p className="text-[#8b949e] text-lg">Welcome back, {user?.username}</p>
       </div>
 
-      {/* Statistics Cards */}
+      {/* Stats Cards (Widgets) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Total Coupons Widget */}
         <div className="bg-[#010409] border border-[#30363d] rounded-[12px] p-6 shadow-xl animate-float">
           <h3 className="text-sm font-semibold text-[#8b949e] mb-2 tracking-wide uppercase">Total Coupons</h3>
           <p className="text-4xl font-bold text-white tracking-tight mb-2">{couponPagination.total || 0}</p>
@@ -61,6 +73,7 @@ const Dashboard = () => {
           </p>
         </div>
 
+        {/* Total Campaigns Widget */}
         <div className="bg-[#010409] border border-[#30363d] rounded-[12px] p-6 shadow-xl animate-float" style={{ animationDelay: '1s' }}>
           <h3 className="text-sm font-semibold text-[#8b949e] mb-2 tracking-wide uppercase">Total Campaigns</h3>
           <p className="text-4xl font-bold text-white tracking-tight mb-2">{campaignPagination.total || 0}</p>
@@ -70,6 +83,7 @@ const Dashboard = () => {
           </p>
         </div>
 
+        {/* Total Orders Widget */}
         <div className="bg-[#010409] border border-[#30363d] rounded-[12px] p-6 shadow-xl animate-float" style={{ animationDelay: '2s' }}>
           <h3 className="text-sm font-semibold text-[#8b949e] mb-2 tracking-wide uppercase">Total Orders</h3>
           <p className="text-4xl font-bold text-white tracking-tight mb-2">{orderPagination.total || 0}</p>
@@ -77,14 +91,11 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Recent Coupons */}
+      {/* Recent Coupons List */}
       <div className="space-y-6">
         <div className="flex justify-between items-end border-b border-[#30363d] pb-4">
           <h2 className="text-xl font-bold text-white tracking-tight">Recent Coupons</h2>
-          <Link
-            to="/coupons"
-            className="text-[#58a6ff] text-sm font-medium hover:underline transition-colors"
-          >
+          <Link to="/coupons" className="text-[#58a6ff] text-sm font-medium hover:underline transition-colors">
             View All →
           </Link>
         </div>
@@ -103,11 +114,11 @@ const Dashboard = () => {
                     <span className="text-[#8b949e] text-sm">{coupon.description}</span>
                   </div>
                 </div>
-                <span
-                  className={`text-xs font-medium px-2 py-0.5 rounded-full border ${coupon.isActive
-                    ? 'bg-[#238636]/10 text-[#3fb950] border-[#238636]/20'
-                    : 'bg-[#30363d]/50 text-[#8b949e] border-[#30363d]'
-                    }`}
+                {/* Active Status Badge */}
+                <span className={`text-xs font-medium px-2 py-0.5 rounded-full border ${coupon.isActive
+                  ? 'bg-[#238636]/10 text-[#3fb950] border-[#238636]/20'
+                  : 'bg-[#30363d]/50 text-[#8b949e] border-[#30363d]'
+                  }`}
                 >
                   {coupon.isActive ? 'Active' : 'Inactive'}
                 </span>
@@ -119,14 +130,11 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Recent Campaigns */}
+      {/* Recent Campaigns List */}
       <div className="space-y-6">
         <div className="flex justify-between items-end border-b border-[#30363d] pb-4">
           <h2 className="text-xl font-bold text-white tracking-tight">Recent Campaigns</h2>
-          <Link
-            to="/campaigns"
-            className="text-[#58a6ff] text-sm font-medium hover:underline transition-colors"
-          >
+          <Link to="/campaigns" className="text-[#58a6ff] text-sm font-medium hover:underline transition-colors">
             View All →
           </Link>
         </div>
@@ -141,11 +149,10 @@ const Dashboard = () => {
                   <span className="font-semibold text-white group-hover:text-[#58a6ff] transition-colors">{campaign.name}</span>
                   <span className="text-[#8b949e] ml-4 text-sm">{campaign.description}</span>
                 </div>
-                <span
-                  className={`text-xs font-medium px-2 py-0.5 rounded-full border ${campaign.isActive
-                    ? 'bg-[#1f6feb]/10 text-[#58a6ff] border-[#1f6feb]/20'
-                    : 'bg-[#30363d]/50 text-[#8b949e] border-[#30363d]'
-                    }`}
+                <span className={`text-xs font-medium px-2 py-0.5 rounded-full border ${campaign.isActive
+                  ? 'bg-[#1f6feb]/10 text-[#58a6ff] border-[#1f6feb]/20'
+                  : 'bg-[#30363d]/50 text-[#8b949e] border-[#30363d]'
+                  }`}
                 >
                   {campaign.isActive ? 'Active' : 'Inactive'}
                 </span>
@@ -157,7 +164,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Quick Actions */}
+      {/* Admin Quick Actions */}
       {user?.role === 'admin' && (
         <div className="space-y-6 pt-6 border-t border-[#30363d]">
           <h2 className="text-xl font-bold text-white tracking-tight">Quick Actions</h2>
@@ -182,5 +189,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
-

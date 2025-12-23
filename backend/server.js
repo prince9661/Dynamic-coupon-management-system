@@ -1,6 +1,3 @@
-// Main server entry point
-// Sets up Express, MongoDB, Socket.IO, and Middleware
-
 import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
@@ -10,54 +7,48 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import compression from 'compression';
 
-// Import custom modules
 import { setupMongoDB } from './config/mongodb.js';
 import { couponEventEmitter } from './utils/eventEmitterInstance.js';
-import { setupFileSystem } from './utils/fileSystem.js';
-import { setupStreams } from './utils/streams.js';
 import apiRoutes from './routes/api.js';
 import { setupSocketIO } from './sockets/socketHandler.js';
 
-// Load environment variables
+// Load environment variables from .env file
 dotenv.config();
 
+// Initialize Express app
 const app = express();
 const server = http.createServer(app);
 
-// Express app setup
+// Enable gzip compression for better performance
+app.use(compression());
 
-// Middleware setup
-app.use(compression()); // Compress responses
+// Configure CORS to allow requests from the frontend
 app.use(cors({
   origin: process.env.FRONTEND_URL || 'http://localhost:5173',
   credentials: true
 }));
 
-// Middleware setup
+// Setup middleware
 app.use(cookieParser()); // Parse cookies from request headers
-app.use(express.json()); // Parse JSON request bodies (replaces body-parser)
+app.use(express.json()); // Parse JSON bodies
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 
-// Session configuration for authentication
+// Configure session middleware
 app.use(session({
   secret: process.env.SESSION_SECRET || 'coupon-secret-key',
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: process.env.NODE_ENV === 'production',
-    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production', // Secure cookies in production
+    httpOnly: true, // Prevent client-side JS from accessing cookies
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
 }));
 
-// Initialize Core Utilities
-
-// Setup file system and streams
-
-// Database Connections
+// Initialize Database Connection
 setupMongoDB();
 
-// Socket.IO Setup
+// Initialize Socket.IO server with CORS configuration
 const io = new Server(server, {
   cors: {
     origin: process.env.FRONTEND_URL || 'http://localhost:5173',
@@ -66,12 +57,13 @@ const io = new Server(server, {
   }
 });
 
+// Setup Socket.IO event handlers
 setupSocketIO(io, couponEventEmitter);
 
-// API Routes
+// Mount API routes
 app.use('/api', apiRoutes);
 
-// Health check endpoint
+// Health check endpoint to verify server status
 app.get('/health', (req, res) => {
   res.status(200).json({
     status: 'OK',
@@ -80,23 +72,23 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Error Handling Middleware
+// Global error handling middleware
 app.use((err, req, res, next) => {
   console.error('Error:', err);
+  // Return standard error response
   res.status(err.status || 500).json({
     error: err.message || 'Internal Server Error',
     ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
   });
 });
 
-// 404 Handler
+// 404 Handler for undefined routes
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-// Start Server
+// Start the server
 const PORT = process.env.PORT || 5000;
-
 server.listen(PORT, () => {
   console.log(`
   Coupon Management System running on http://localhost:${PORT}
@@ -104,5 +96,5 @@ server.listen(PORT, () => {
   `);
 });
 
+// Export instances for testing or external use
 export { app, server, io, couponEventEmitter };
-
