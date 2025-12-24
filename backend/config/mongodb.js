@@ -17,13 +17,13 @@ export const setupMongoDB = async () => {
     // Establish connection to MongoDB
     await mongoose.connect(mongoURI);
 
-    console.log('✅ MongoDB Connected Successfully');
+    console.log('MongoDB Connected Successfully');
 
     // Seed the database with an initial admin user if it doesn't exist
     await createAdminUser();
 
   } catch (error) {
-    console.error('❌ MongoDB Connection Error:', error.message);
+    console.error('MongoDB Connection Error:', error.message);
     // Exit process with failure if connection cannot be established
     process.exit(1);
   }

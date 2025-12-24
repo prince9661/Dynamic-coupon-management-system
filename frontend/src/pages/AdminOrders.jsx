@@ -90,13 +90,13 @@ const AdminOrders = () => {
                                             {order.status === 'pending' && (
                                                 <div className="flex space-x-2">
                                                     <button
-                                                        onClick={() => dispatch(updateOrderStatus({ orderId: order._id, status: 'accepted' }))}
+                                                        onClick={() => dispatch(updateOrderStatus({ orderId: order._id, status: 'completed' }))}
                                                         className="bg-[#238636] text-white px-2.5 py-1 rounded-[6px] text-xs font-bold hover:bg-[#2ea043] border border-[rgba(240,246,252,0.1)] transition-colors shadow-sm"
                                                     >
                                                         Accept
                                                     </button>
                                                     <button
-                                                        onClick={() => dispatch(updateOrderStatus({ orderId: order._id, status: 'rejected' }))}
+                                                        onClick={() => dispatch(updateOrderStatus({ orderId: order._id, status: 'cancelled' }))}
                                                         className="bg-[#da3633] text-white px-2.5 py-1 rounded-[6px] text-xs font-bold hover:bg-[#f85149] border border-[rgba(240,246,252,0.1)] transition-colors shadow-sm"
                                                     >
                                                         Reject

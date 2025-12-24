@@ -29,7 +29,7 @@ export const setupStreams = (eventEmitter) => {
     });
   });
 
-  console.log('✅ Stream utilities initialized');
+  console.log('Stream utilities initialized');
 };
 
 export const compressLogFile = async (sourceFile, destFile) => {
@@ -45,10 +45,10 @@ export const compressLogFile = async (sourceFile, destFile) => {
 
     await pipeline(readStream, gzipStream, writeStream);
 
-    console.log(`✅ Compressed ${sourceFile} to ${destFile}`);
+    console.log(`Compressed ${sourceFile} to ${destFile}`);
     return true;
   } catch (error) {
-    console.error('❌ Compression error:', error);
+    console.error('Compression error:', error);
     return false;
   }
 };
@@ -66,10 +66,10 @@ export const decompressLogFile = async (sourceFile, destFile) => {
 
     await pipeline(readStream, gunzipStream, writeStream);
 
-    console.log(`✅ Decompressed ${sourceFile} to ${destFile}`);
+    console.log(`Decompressed ${sourceFile} to ${destFile}`);
     return true;
   } catch (error) {
-    console.error('❌ Decompression error:', error);
+    console.error(' Decompression error:', error);
     return false;
   }
 };

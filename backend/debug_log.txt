@@ -1,0 +1,21 @@
+2025-12-24T04:29:08.011Z: Starting applyCouponToOrder
+2025-12-24T04:29:08.013Z: User: 694b6464d0931ad7a9a13551, Order: 694b6c134bb6d4b420d141e7, Code: SAVE20
+2025-12-24T04:29:08.097Z: Coupon found: 6948c23d8439b5ea09d682da
+2025-12-24T04:29:08.099Z: Starting cleanup
+2025-12-24T04:29:08.191Z: Deleting pending usage: 694b6b8dc2ed4d230444bb8e
+2025-12-24T04:29:08.238Z: Cleanup done
+2025-12-24T04:29:08.286Z: Calculating discount
+2025-12-24T04:29:08.338Z: Order saved
+2025-12-24T04:29:08.339Z: Tracking usage
+2025-12-24T04:29:08.386Z: CRASH: Coupon validation failed: createdBy: Cast to ObjectId failed for value "prince1" (type string) at path "createdBy" because of "BSONError" 
+ ValidationError: Coupon validation failed: createdBy: Cast to ObjectId failed for value "prince1" (type string) at path "createdBy" because of "BSONError"
+    at Document.invalidate (D:\SEM-5\Dynamic-coupon-management-system\Dynamic-coupon-management-system\backend\node_modules\mongoose\lib\document.js:3371:32)
+    at init (D:\SEM-5\Dynamic-coupon-management-system\Dynamic-coupon-management-system\backend\node_modules\mongoose\lib\document.js:805:18)
+    at Document.$__init (D:\SEM-5\Dynamic-coupon-management-system\Dynamic-coupon-management-system\backend\node_modules\mongoose\lib\document.js:711:3)
+    at model.syncWrapper [as $__init] (D:\SEM-5\Dynamic-coupon-management-system\Dynamic-coupon-management-system\backend\node_modules\kareem\index.js:331:25)
+    at Document.init (D:\SEM-5\Dynamic-coupon-management-system\Dynamic-coupon-management-system\backend\node_modules\mongoose\lib\document.js:655:8)
+    at Document.$init (D:\SEM-5\Dynamic-coupon-management-system\Dynamic-coupon-management-system\backend\node_modules\mongoose\lib\document.js:671:42)
+    at Object.createModelAndInit (D:\SEM-5\Dynamic-coupon-management-system\Dynamic-coupon-management-system\backend\node_modules\mongoose\lib\queryHelpers.js:119:12)
+    at completeOne (D:\SEM-5\Dynamic-coupon-management-system\Dynamic-coupon-management-system\backend\node_modules\mongoose\lib\query.js:3308:11)
+    at Query._completeOne (D:\SEM-5\Dynamic-coupon-management-system\Dynamic-coupon-management-system\backend\node_modules\mongoose\lib\query.js:2634:7)
+    at D:\SEM-5\Dynamic-coupon-management-system\Dynamic-coupon-management-system\backend\node_modules\mongoose\lib\query.js:2712:10

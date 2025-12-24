@@ -14,11 +14,11 @@ export const createAdminUser = async () => {
         const existingAdmin = await User.findOne({ role: 'admin' });
 
         if (existingAdmin) {
-            console.log('ℹ️ Admin user already exists.');
+            console.log('Admin user already exists.');
             return;
         }
 
-        console.log('⚠️ No admin user found. Creating default admin...');
+        console.log('No admin user found. Creating default admin...');
 
         // Default admin credentials from environment or hardcoded fallbacks
         // It is STRONGLY recommended to use environment variables in production
@@ -33,12 +33,12 @@ export const createAdminUser = async () => {
         const newAdmin = new User(adminData);
         await newAdmin.save();
 
-        console.log(`✅ Default admin created successfully.`);
+        console.log(` Default admin created successfully.`);
         console.log(`   Username: ${adminData.username}`);
         console.log(`   Email: ${adminData.email}`);
         // console.log(`   Password: ${adminData.password}`); // Checking only, don't log in prod
 
     } catch (error) {
-        console.error('❌ Error creating default admin user:', error.message);
+        console.error('Error creating default admin user:', error.message);
     }
 };

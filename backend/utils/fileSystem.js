@@ -10,13 +10,13 @@ export const setupFileSystem = () => {
     const logsDir = path.join(__dirname, '../logs');
     if (!fs.existsSync(logsDir)) {
       fs.mkdirSync(logsDir, { recursive: true });
-      console.log('✅ Created logs directory');
+      console.log('Created logs directory');
     }
 
     const dataDir = path.join(__dirname, '../data');
     if (!fs.existsSync(dataDir)) {
       fs.mkdirSync(dataDir, { recursive: true });
-      console.log('✅ Created data directory');
+      console.log('Created data directory');
     }
 
     const logFile = path.join(logsDir, 'coupon-operations.log');
@@ -24,9 +24,9 @@ export const setupFileSystem = () => {
       fs.writeFileSync(logFile, `=== Coupon Operations Log ===\nStarted: ${new Date().toISOString()}\n\n`, 'utf8');
     }
 
-    console.log('✅ File system utilities initialized');
+    console.log('File system utilities initialized');
   } catch (error) {
-    console.error('❌ File system setup error:', error.message);
+    console.error('File system setup error:', error.message);
   }
 };
 

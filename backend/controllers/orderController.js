@@ -37,28 +37,51 @@ export const createOrder = async (req, res) => {
  */
 export const applyCouponToOrder = async (req, res) => {
     try {
+        console.log('>>> applyCouponToOrder called');
         const { orderId, couponCode } = req.body;
         const userId = req.user._id;
 
         // Fetch order and verify ownership
         const order = await Order.findOne({ _id: orderId, userId, status: 'pending' });
         if (!order) {
+            console.error('Pending order not found', orderId);
             return res.status(404).json({ message: 'Pending order not found' });
         }
 
         // Fetch coupon
         const coupon = await Coupon.findOne({ code: couponCode });
         if (!coupon) {
+            console.error('Invalid coupon code', couponCode);
             return res.status(404).json({ message: 'Invalid coupon code' });
         }
 
         // Validate coupon against order amount
         const validity = coupon.isValid(order.totalAmount);
         if (!validity.valid) {
+            console.error('Coupon invalid:', validity.reason);
             return res.status(400).json({ message: validity.reason });
         }
 
-        // Check user-specific limits
+        // Cleanup: Remove any previous "pending" usage for this coupon by this user
+        try {
+            const existingUsages = await UsageTracking.find({
+                couponId: coupon._id,
+                userId: userId
+            }).populate('orderId');
+
+            for (const usage of existingUsages) {
+                // Safely check if orderId exists and is pending
+                if (usage.orderId && usage.orderId.status === 'pending') {
+                    console.log(`Deleting stale usage record: ${usage._id}`);
+                    await UsageTracking.findByIdAndDelete(usage._id);
+                }
+            }
+        } catch (cleanupError) {
+            console.error('Usage cleanup failed:', cleanupError);
+            // Non-blocking error, continue
+        }
+
+        // Re-Check limits after cleanup
         const userUsageCount = await UsageTracking.countDocuments({
             couponId: coupon._id,
             userId: userId
@@ -85,18 +108,22 @@ export const applyCouponToOrder = async (req, res) => {
             orderId: order._id
         });
 
-        // Increment global coupon usage counter
-        coupon.currentUsage += 1;
-        await coupon.save();
+        // Increment global coupon usage counter atomically
+        await Coupon.updateOne(
+            { _id: coupon._id },
+            { $inc: { currentUsage: 1 } }
+        );
 
         // Emit event for real-time updates (Analytics/Dashboard)
         try {
-            couponEventEmitter.emit('couponUsed', {
-                couponCode: coupon.code,
-                userId: userId,
-                discount: discountAmount,
-                timestamp: new Date()
-            });
+            if (couponEventEmitter) {
+                couponEventEmitter.emit('coupon:used', {
+                    couponCode: coupon.code,
+                    userId: userId,
+                    discount: discountAmount,
+                    timestamp: new Date()
+                });
+            }
         } catch (err) {
             console.error("Event emission error:", err);
         }
@@ -107,7 +134,7 @@ export const applyCouponToOrder = async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Apply Coupon Error:', error);
+        console.error('Apply Coupon CRASH:', error);
         res.status(500).json({ message: error.message });
     }
 };

@@ -1,7 +1,8 @@
 import Coupon from '../models/Coupon.js';
+import Order from '../models/Order.js';
 import UsageTracking from '../models/UsageTracking.js';
 import { validationResult } from 'express-validator';
-import { io } from '../server.js';
+
 
 /**
  * Create a new coupon.
@@ -190,12 +191,22 @@ export const validateCoupon = async (req, res) => {
         }
 
         // Step 2: Check per-user usage limit
-        const userUsageCount = await UsageTracking.countDocuments({
+        // Retrieve usage records with their associated order status
+        const userUsages = await UsageTracking.find({
             couponId: coupon._id,
             userId: userId
-        });
+        }).populate('orderId');
 
-        if (userUsageCount >= coupon.userMaxUsage) {
+        // Allow ignoring "pending" orders (abandoned carts)
+        // Only count usages where the order is completed (or not pending)
+        const validUsageCount = userUsages.filter(usage => {
+            // If no order linked, verify if we should count it (assume yes for safety)
+            if (!usage.orderId) return true;
+            // If order is pending, don't count it as a "consumed" use yet
+            return usage.orderId.status !== 'pending';
+        }).length;
+
+        if (validUsageCount >= coupon.userMaxUsage) {
             return res.status(400).json({
                 message: 'You have assumed the maximum usage limit for this coupon'
             });
